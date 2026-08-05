@@ -6,6 +6,7 @@ const path = require("path");
 const authRoutes = require("./routes/auth");
 const incidentRoutes = require("./routes/incidents");
 const adminRoutes = require("./routes/admin");
+const facilitiesRoutes = require("./routes/facilities");
 
 const app = express();
 app.set("trust proxy", 1); // correct client IPs & cookies behind tunnels/hosting proxies
@@ -27,6 +28,7 @@ app.use(
 app.use("/api", authRoutes);
 app.use("/api", incidentRoutes);
 app.use("/api", adminRoutes);
+app.use("/api", facilitiesRoutes);
 
 // Page routes (protect dashboard, keep auth pages away from logged-in users)
 const pub = path.join(__dirname, "public");
@@ -47,6 +49,9 @@ app.get("/feed", (req, res) => res.sendFile(path.join(pub, "feed.html")));
 app.get("/quick-report", (req, res) => res.sendFile(path.join(pub, "quick-report.html")));
 app.get("/volunteer", (req, res) => res.sendFile(path.join(pub, "volunteer.html")));
 app.get("/track/:id", (req, res) => res.sendFile(path.join(pub, "track.html")));
+app.get("/shelters", (req, res) => res.sendFile(path.join(pub, "shelters.html")));
+app.get("/missing", (req, res) => res.sendFile(path.join(pub, "missing.html")));
+app.get("/safe-route", (req, res) => res.sendFile(path.join(pub, "safe-route.html")));
 
 // Uploaded incident photos (login required)
 app.use("/uploads", requireLogin, express.static(path.join(__dirname, "uploads")));

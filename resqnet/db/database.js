@@ -71,6 +71,39 @@ db.exec(`
 `);
 
 db.exec(`
+  CREATE TABLE IF NOT EXISTS shelters (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    name        TEXT    NOT NULL,
+    district    TEXT,
+    lat         REAL    NOT NULL,
+    lng         REAL    NOT NULL,
+    capacity    INTEGER NOT NULL DEFAULT 0,
+    occupancy   INTEGER NOT NULL DEFAULT 0,
+    contact     TEXT,
+    notes       TEXT,
+    created_by  INTEGER REFERENCES users(id),
+    created_at  TEXT    NOT NULL DEFAULT (datetime('now'))
+  );
+`);
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS missing_persons (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    name        TEXT    NOT NULL,
+    age         INTEGER,
+    description TEXT,
+    last_seen   TEXT,
+    district    TEXT,
+    lat         REAL,
+    lng         REAL,
+    contact     TEXT,
+    status      TEXT    NOT NULL DEFAULT 'missing',  -- missing | found
+    reported_by INTEGER REFERENCES users(id),
+    created_at  TEXT    NOT NULL DEFAULT (datetime('now'))
+  );
+`);
+
+db.exec(`
   CREATE TABLE IF NOT EXISTS messages (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     incident_id INTEGER NOT NULL REFERENCES incidents(id),

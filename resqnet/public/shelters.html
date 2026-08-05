@@ -1,0 +1,107 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Emergency shelters — ResQNet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="stylesheet" href="/css/app.css">
+<style>
+html,body{height:100%}body{display:flex;flex-direction:column;overflow:hidden}
+.mbar{display:flex;align-items:center;gap:18px;padding:13px 22px;background:var(--card);border-bottom:1px solid var(--rule-2);z-index:500;flex-wrap:wrap}
+.mbar .brand{font-size:17px}
+.mbar .links{display:flex;gap:16px;margin-left:auto;flex-wrap:wrap}
+.wrap{flex:1;display:flex;min-height:0}
+#map{flex:1;min-height:0}
+.side{width:390px;max-width:44vw;overflow:auto;border-left:1px solid var(--rule-2);background:var(--bg);padding:16px}
+.sh{background:var(--card);border:1px solid var(--rule-2);border-radius:14px;padding:13px 15px;margin-bottom:12px}
+.sh h3{margin:0 0 4px;font-size:16px}
+.sh .meta{font-size:12.5px;color:var(--muted);margin-bottom:6px}
+.bar{height:8px;border-radius:6px;background:var(--rule-2);overflow:hidden;margin:7px 0}
+.bar > i{display:block;height:100%;background:linear-gradient(90deg,#3fb37f,#f2c14e)}
+.bar.full > i{background:linear-gradient(90deg,#f2c14e,#e5544b)}
+.addbtn{width:100%;padding:11px;border-radius:12px;border:0;background:var(--accent);color:#fff;font-weight:700;cursor:pointer;margin-bottom:14px}
+.form{background:var(--card);border:1px solid var(--rule-2);border-radius:14px;padding:14px;margin-bottom:14px;display:none}
+.form.open{display:block}
+.form label{display:block;font-size:12.5px;color:var(--muted);margin:8px 0 3px}
+.form input,.form textarea{width:100%;padding:8px 10px;border-radius:9px;border:1px solid var(--rule-2);background:var(--bg);color:var(--ink);font:inherit;box-sizing:border-box}
+.form .row{display:flex;gap:8px}.form .row > div{flex:1}
+.hint{font-size:12px;color:var(--muted);margin-top:6px}
+.mini{font-size:12px;color:var(--muted)}
+</style></head>
+<body>
+<nav class="mbar"><a href="/" class="brand"><span class="mk">✚</span> Res<span class="q">Q</span>Net</a>
+  <div class="links"><a href="/map">Live map</a><a href="/missing">Missing persons</a><a href="/safe-route">Safe route</a><a href="/feed">Transparency</a></div>
+</nav>
+<div class="wrap">
+  <div id="map"></div>
+  <div class="side">
+    <button class="addbtn" id="toggle">＋ Add a shelter</button>
+    <div class="form" id="form">
+      <label>Shelter name *</label><input id="name" placeholder="e.g. Kandy Community Hall">
+      <div class="row"><div><label>Capacity</label><input id="capacity" type="number" min="0" placeholder="200"></div>
+        <div><label>Currently housed</label><input id="occupancy" type="number" min="0" placeholder="0"></div></div>
+      <label>Contact</label><input id="contact" placeholder="Phone or name">
+      <label>Notes</label><textarea id="notes" rows="2" placeholder="Access notes, facilities…"></textarea>
+      <div class="hint" id="loc">📍 Click on the map to set the shelter location.</div>
+      <button class="addbtn" id="save" style="margin-top:10px">Save shelter</button>
+    </div>
+    <div id="list"><p class="mini">Loading shelters…</p></div>
+  </div>
+</div>
+<script src="/vendor/leaflet/leaflet.js"></script>
+<script>
+const map = L.map('map').setView([7.29,80.63], 8);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
+let pick=null, pickMarker=null, markers=[];
+map.on('click', e=>{
+  if(!document.getElementById('form').classList.contains('open')) return;
+  pick=e.latlng;
+  if(pickMarker) pickMarker.setLatLng(pick); else pickMarker=L.marker(pick).addTo(map);
+  document.getElementById('loc').textContent='📍 Location set ('+pick.lat.toFixed(4)+', '+pick.lng.toFixed(4)+')';
+});
+document.getElementById('toggle').onclick=()=>document.getElementById('form').classList.toggle('open');
+
+function shelterIcon(){return L.divIcon({className:'',html:'<div style="font-size:26px;line-height:1">🏠</div>',iconSize:[26,26],iconAnchor:[13,13]});}
+
+async function load(){
+  const r=await fetch('/api/shelters'); const j=await r.json();
+  markers.forEach(m=>map.removeLayer(m)); markers=[];
+  const list=document.getElementById('list');
+  if(!j.shelters.length){ list.innerHTML='<p class="mini">No shelters registered yet. Add the first one.</p>'; return; }
+  list.innerHTML='';
+  j.shelters.forEach(s=>{
+    if(s.lat&&s.lng){ const m=L.marker([s.lat,s.lng],{icon:shelterIcon()}).addTo(map)
+      .bindPopup('<b>'+esc(s.name)+'</b><br>'+(s.district||'')+'<br>'+s.occupancy+' / '+s.capacity+' housed'); markers.push(m); }
+    const pct = s.capacity? Math.min(100,Math.round(s.occupancy/s.capacity*100)) : 0;
+    const full = s.capacity && s.occupancy>=s.capacity;
+    const el=document.createElement('div'); el.className='sh';
+    el.innerHTML='<h3>'+esc(s.name)+'</h3>'
+      +'<div class="meta">'+(s.district?esc(s.district)+' · ':'')+(s.contact?esc(s.contact):'')+'</div>'
+      +'<div class="bar '+(full?'full':'')+'"><i style="width:'+pct+'%"></i></div>'
+      +'<div class="mini">'+s.occupancy+' / '+s.capacity+' housed'+(full?' — <b>full</b>':'')+'</div>'
+      +(s.notes?'<div class="mini" style="margin-top:5px">'+esc(s.notes)+'</div>':'');
+    list.appendChild(el);
+  });
+}
+function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+document.getElementById('save').onclick=async()=>{
+  const name=document.getElementById('name').value.trim();
+  if(!name) return alert('Shelter name is required.');
+  if(!pick) return alert('Click on the map to set the location.');
+  const body={name,lat:pick.lat,lng:pick.lng,
+    capacity:document.getElementById('capacity').value,
+    occupancy:document.getElementById('occupancy').value,
+    contact:document.getElementById('contact').value,
+    notes:document.getElementById('notes').value};
+  const r=await fetch('/api/shelters',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const j=await r.json();
+  if(!j.ok){ alert((j.errors&&j.errors[0])||'Could not save. Are you signed in?'); return; }
+  ['name','capacity','occupancy','contact','notes'].forEach(id=>document.getElementById(id).value='');
+  if(pickMarker){map.removeLayer(pickMarker);pickMarker=null;} pick=null;
+  document.getElementById('form').classList.remove('open');
+  document.getElementById('loc').textContent='📍 Click on the map to set the shelter location.';
+  load();
+};
+load();
+</script>
+</body></html>

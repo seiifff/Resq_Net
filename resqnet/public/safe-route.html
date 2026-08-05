@@ -1,0 +1,112 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Safe route — ResQNet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="stylesheet" href="/css/app.css">
+<style>
+html,body{height:100%}body{display:flex;flex-direction:column;overflow:hidden}
+.mbar{display:flex;align-items:center;gap:18px;padding:13px 22px;background:var(--card);border-bottom:1px solid var(--rule-2);z-index:500;flex-wrap:wrap}
+.mbar .brand{font-size:17px}
+.mbar .links{display:flex;gap:16px;margin-left:auto;flex-wrap:wrap}
+.wrap{flex:1;display:flex;min-height:0}
+#map{flex:1;min-height:0}
+.side{width:360px;max-width:44vw;overflow:auto;border-left:1px solid var(--rule-2);background:var(--bg);padding:18px}
+.side h2{margin:0 0 6px;font-size:19px}
+.side .lead{color:var(--muted);font-size:13.5px;margin-bottom:16px}
+.btn{width:100%;padding:12px;border-radius:12px;border:0;background:var(--accent);color:#fff;font-weight:700;cursor:pointer;margin-bottom:12px}
+.btn.sec{background:var(--card);color:var(--ink);border:1px solid var(--rule-2)}
+.dest{background:var(--card);border:1px solid var(--rule-2);border-radius:13px;padding:12px 14px;margin-bottom:12px}
+.dest h3{margin:0 0 4px;font-size:15px}
+.dest .mini{font-size:12.5px;color:var(--muted)}
+.summary{background:var(--card);border:1px solid var(--rule-2);border-radius:13px;padding:12px 14px;margin-bottom:12px;display:none}
+.summary.show{display:block}
+.summary b{font-size:20px}
+.mini{font-size:12.5px;color:var(--muted)}
+</style></head>
+<body>
+<nav class="mbar"><a href="/" class="brand"><span class="mk">✚</span> Res<span class="q">Q</span>Net</a>
+  <div class="links"><a href="/map">Live map</a><a href="/shelters">Shelters</a><a href="/missing">Missing persons</a><a href="/feed">Transparency</a></div>
+</nav>
+<div class="wrap">
+  <div id="map"></div>
+  <div class="side">
+    <h2>Safe evacuation route</h2>
+    <div class="lead">Find the nearest registered shelter and get a route to it. Routing runs on free OpenStreetMap data.</div>
+    <button class="btn" id="locate">📍 Use my location</button>
+    <div class="mini" id="status">Tap “Use my location”, or click the map to set your start point.</div>
+    <div class="summary" id="summary"></div>
+    <div id="dests"></div>
+  </div>
+</div>
+<script src="/vendor/leaflet/leaflet.js"></script>
+<script>
+const map=L.map('map').setView([7.29,80.63],8);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
+let start=null, startMarker=null, routeLine=null, shelters=[], shelterMarkers=[];
+
+function shelterIcon(){return L.divIcon({className:'',html:'<div style="font-size:24px;line-height:1">🏠</div>',iconSize:[24,24],iconAnchor:[12,12]});}
+function meIcon(){return L.divIcon({className:'',html:'<div style="font-size:22px;line-height:1">🧍</div>',iconSize:[22,22],iconAnchor:[11,11]});}
+function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function dist(a,b){const R=6371,dLat=(b[0]-a[0])*Math.PI/180,dLng=(b[1]-a[1])*Math.PI/180,
+  x=Math.sin(dLat/2)**2+Math.cos(a[0]*Math.PI/180)*Math.cos(b[0]*Math.PI/180)*Math.sin(dLng/2)**2;
+  return 2*R*Math.asin(Math.sqrt(x));}
+
+async function loadShelters(){
+  const r=await fetch('/api/shelters'); const j=await r.json();
+  shelters=j.shelters.filter(s=>s.lat&&s.lng);
+  shelterMarkers.forEach(m=>map.removeLayer(m)); shelterMarkers=[];
+  shelters.forEach(s=>{const m=L.marker([s.lat,s.lng],{icon:shelterIcon()}).addTo(map)
+    .bindPopup('<b>'+esc(s.name)+'</b><br>'+(s.occupancy||0)+' / '+(s.capacity||0)+' housed'); shelterMarkers.push(m);});
+  if(!shelters.length) document.getElementById('status').textContent='No shelters registered yet — add some on the Shelters page first.';
+}
+
+function setStart(latlng){
+  start=latlng;
+  if(startMarker) startMarker.setLatLng(start); else startMarker=L.marker(start,{icon:meIcon()}).addTo(map);
+  rank();
+}
+map.on('click',e=>setStart(e.latlng));
+document.getElementById('locate').onclick=()=>{
+  document.getElementById('status').textContent='Locating…';
+  navigator.geolocation.getCurrentPosition(
+    p=>{const ll=L.latLng(p.coords.latitude,p.coords.longitude);map.setView(ll,13);setStart(ll);
+        document.getElementById('status').textContent='Location set. Nearest shelters below.';},
+    ()=>document.getElementById('status').textContent='Could not get location — click the map to set your start point instead.');
+};
+
+function rank(){
+  if(!start||!shelters.length) return;
+  const withD=shelters.map(s=>({s,d:dist([start.lat,start.lng],[s.lat,s.lng])})).sort((a,b)=>a.d-b.d);
+  const box=document.getElementById('dests'); box.innerHTML='<div class="mini" style="margin:10px 0 8px"><b>Nearest shelters</b></div>';
+  withD.slice(0,5).forEach(({s,d})=>{
+    const el=document.createElement('div'); el.className='dest';
+    const full=s.capacity&&s.occupancy>=s.capacity;
+    el.innerHTML='<h3>'+esc(s.name)+'</h3><div class="mini">'+d.toFixed(1)+' km away · '
+      +(s.occupancy||0)+'/'+(s.capacity||0)+' housed'+(full?' — <b>full</b>':'')+'</div>';
+    const b=document.createElement('button'); b.className='btn sec'; b.style.marginTop='8px'; b.textContent='Route to here';
+    b.onclick=()=>route(s); el.appendChild(b); box.appendChild(el);
+  });
+}
+
+async function route(s){
+  if(!start) return;
+  document.getElementById('status').textContent='Finding route…';
+  const url='https://router.project-osrm.org/route/v1/driving/'+start.lng+','+start.lat+';'+s.lng+','+s.lat+'?overview=full&geometries=geojson';
+  try{
+    const r=await fetch(url); const j=await r.json();
+    if(!j.routes||!j.routes.length){ document.getElementById('status').textContent='No route found.'; return; }
+    const rt=j.routes[0];
+    if(routeLine) map.removeLayer(routeLine);
+    const coords=rt.geometry.coordinates.map(c=>[c[1],c[0]]);
+    routeLine=L.polyline(coords,{color:'#e5544b',weight:5,opacity:.85}).addTo(map);
+    map.fitBounds(routeLine.getBounds(),{padding:[40,40]});
+    const km=(rt.distance/1000).toFixed(1), min=Math.round(rt.duration/60);
+    const sm=document.getElementById('summary'); sm.className='summary show';
+    sm.innerHTML='Route to <b>'+esc(s.name)+'</b><br><span class="mini">'+km+' km · about '+min+' min by road</span>';
+    document.getElementById('status').textContent='Route shown on the map.';
+  }catch(e){ document.getElementById('status').textContent='Routing service unavailable right now.'; }
+}
+loadShelters();
+</script>
+</body></html>

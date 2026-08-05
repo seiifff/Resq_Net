@@ -1,0 +1,97 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Missing persons — ResQNet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="stylesheet" href="/css/app.css">
+<style>
+.page{max-width:1000px;margin:0 auto;padding:22px 18px 60px}
+.head{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+.head .links{display:flex;gap:16px;margin-left:auto;flex-wrap:wrap}
+h1{margin:14px 0 4px}
+.sub{color:var(--muted);margin-bottom:20px}
+.addbtn{padding:11px 18px;border-radius:12px;border:0;background:var(--accent);color:#fff;font-weight:700;cursor:pointer;margin-bottom:16px}
+.form{background:var(--card);border:1px solid var(--rule-2);border-radius:16px;padding:18px;margin-bottom:22px;display:none}
+.form.open{display:block}
+.form label{display:block;font-size:13px;color:var(--muted);margin:10px 0 3px}
+.form input,.form textarea{width:100%;padding:9px 11px;border-radius:10px;border:1px solid var(--rule-2);background:var(--bg);color:var(--ink);font:inherit;box-sizing:border-box}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row>div{flex:1;min-width:120px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.card2{background:var(--card);border:1px solid var(--rule-2);border-radius:16px;padding:15px 16px}
+.card2.found{opacity:.62}
+.card2 h3{margin:0 0 3px;font-size:17px}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;margin-left:6px}
+.tag.missing{background:rgba(229,84,75,.16);color:#e5544b}
+.tag.found{background:rgba(63,179,127,.16);color:#3fb37f}
+.card2 .meta{font-size:13px;color:var(--muted);margin:3px 0}
+.card2 p{font-size:13.5px;margin:8px 0 0}
+.foundbtn{margin-top:10px;padding:7px 13px;border-radius:9px;border:1px solid var(--rule-2);background:var(--bg);color:var(--ink);cursor:pointer;font-size:13px}
+.mini{color:var(--muted);font-size:13px}
+</style></head>
+<body>
+<div class="page">
+  <nav class="head"><a href="/" class="brand"><span class="mk">✚</span> Res<span class="q">Q</span>Net</a>
+    <div class="links"><a href="/map">Live map</a><a href="/shelters">Shelters</a><a href="/safe-route">Safe route</a><a href="/feed">Transparency</a></div>
+  </nav>
+  <h1>Missing persons register</h1>
+  <div class="sub">Report someone missing after an emergency, and help reunite families. Anyone can view; sign in to add a report.</div>
+
+  <button class="addbtn" id="toggle">＋ Report a missing person</button>
+  <div class="form" id="form">
+    <div class="row">
+      <div><label>Full name *</label><input id="name" placeholder="Name of the missing person"></div>
+      <div><label>Age</label><input id="age" type="number" min="0" placeholder="e.g. 34"></div>
+    </div>
+    <label>Description</label><textarea id="description" rows="2" placeholder="Appearance, clothing, distinguishing features…"></textarea>
+    <div class="row">
+      <div><label>Last seen (place / time)</label><input id="last_seen" placeholder="e.g. near Kandy lake, 3 Aug morning"></div>
+      <div><label>District</label><input id="district" placeholder="e.g. Kandy"></div>
+    </div>
+    <label>Contact for information</label><input id="contact" placeholder="Phone or name">
+    <button class="addbtn" id="save" style="margin-top:14px">Submit report</button>
+  </div>
+
+  <div class="grid" id="list"><p class="mini">Loading…</p></div>
+</div>
+<script>
+function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+document.getElementById('toggle').onclick=()=>document.getElementById('form').classList.toggle('open');
+
+async function load(){
+  const r=await fetch('/api/missing'); const j=await r.json();
+  const list=document.getElementById('list');
+  if(!j.people.length){ list.innerHTML='<p class="mini">No reports yet.</p>'; return; }
+  list.innerHTML='';
+  j.people.forEach(p=>{
+    const el=document.createElement('div'); el.className='card2'+(p.status==='found'?' found':'');
+    el.innerHTML='<h3>'+esc(p.name)+(p.age?', '+p.age:'')
+      +'<span class="tag '+p.status+'">'+(p.status==='found'?'FOUND':'MISSING')+'</span></h3>'
+      +(p.last_seen?'<div class="meta">Last seen: '+esc(p.last_seen)+'</div>':'')
+      +(p.district?'<div class="meta">District: '+esc(p.district)+'</div>':'')
+      +(p.contact?'<div class="meta">Contact: '+esc(p.contact)+'</div>':'')
+      +(p.description?'<p>'+esc(p.description)+'</p>':'')
+      +(p.status==='missing'?'<button class="foundbtn" data-id="'+p.id+'">Mark as found</button>':'');
+    list.appendChild(el);
+  });
+  list.querySelectorAll('.foundbtn').forEach(b=>b.onclick=async()=>{
+    const r=await fetch('/api/missing/'+b.dataset.id+'/found',{method:'POST'});
+    const j=await r.json(); if(!j.ok){alert((j.errors&&j.errors[0])||'Sign in first.');return;} load();
+  });
+}
+document.getElementById('save').onclick=async()=>{
+  const name=document.getElementById('name').value.trim();
+  if(!name) return alert('Name is required.');
+  const body={name,age:document.getElementById('age').value,
+    description:document.getElementById('description').value,
+    last_seen:document.getElementById('last_seen').value,
+    district:document.getElementById('district').value,
+    contact:document.getElementById('contact').value};
+  const r=await fetch('/api/missing',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const j=await r.json();
+  if(!j.ok){ alert((j.errors&&j.errors[0])||'Could not save. Are you signed in?'); return; }
+  ['name','age','description','last_seen','district','contact'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('form').classList.remove('open');
+  load();
+};
+load();
+</script>
+</body></html>
