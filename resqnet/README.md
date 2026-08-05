@@ -93,7 +93,7 @@ Requirements were gathered iteratively from the client and refined through three
 | Member | Role |
 |--------|------|
 | Hishma Izamy | Project Manager |
-| Seif Feroz | Start-up Manager (Lead Developer) |
+| Seif Ferooz | Start-up Manager (Lead Developer) |
 | Himashi Chandrarathna | Quality Manager |
 | Gayathri Senavirathna | Risk Manager |
 | Nethmi Bandusena | Scheduling Manager |
