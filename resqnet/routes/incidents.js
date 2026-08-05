@@ -78,6 +78,13 @@ router.post("/incidents", requireLogin, upload.single("photo"), (req, res) => {
     scoreSeverity(type, description), districtFor(la, ln)
   );
 
+  // A report backed by a photo is stronger evidence — small trust boost (+3,
+  // bounded 0–200). Encourages credible, verifiable reports.
+  if (req.file) {
+    db.prepare("UPDATE users SET trust_score = MAX(0, MIN(200, trust_score + 3)) WHERE id = ?")
+      .run(req.session.user.id);
+  }
+
   res.json({ ok: true, id: info.lastInsertRowid, redirect: "/map" });
 });
 
@@ -283,6 +290,36 @@ router.post("/incidents/:id/checkin", requireLogin, (req, res) => {
      WHERE id = ? AND responder_id = ? AND status = 'responding'`
   ).run(req.params.id, req.session.user.id);
   if (!r.changes) return res.status(409).json({ ok: false, errors: ["You're not the active responder here."] });
+  res.json({ ok: true });
+});
+
+// ----------------------------------------------------- MARK DELIVERED --
+// The responding volunteer marks supplies delivered. This notifies the
+// citizen and the organisation (they poll the incident / their feeds).
+router.post("/incidents/:id/delivered", requireLogin, (req, res) => {
+  const inc = db.prepare("SELECT * FROM incidents WHERE id = ?").get(req.params.id);
+  if (!inc) return res.status(404).json({ ok: false, errors: ["Incident not found."] });
+  const allowed = req.session.user.role === "admin" ||
+    (inc.responder_id === req.session.user.id && inc.status === "responding");
+  if (!allowed) return res.status(403).json({ ok: false, errors: ["Only the active responder or an admin can mark delivery."] });
+  db.prepare(
+    `UPDATE incidents SET delivered = 1, delivered_at = datetime('now') WHERE id = ?`
+  ).run(inc.id);
+  res.json({ ok: true });
+});
+
+// ------------------------------------------------ LIVE LOCATION UPDATE --
+// The active responder's browser posts its GPS every few seconds while the
+// incident page is open. Citizen / admin read it back to track the responder.
+router.post("/incidents/:id/location", requireLogin, (req, res) => {
+  const { lat, lng } = req.body || {};
+  const la = parseFloat(lat), ln = parseFloat(lng);
+  if (!Number.isFinite(la) || !Number.isFinite(ln)) return res.status(400).json({ ok: false });
+  const r = db.prepare(
+    `UPDATE incidents SET responder_lat = ?, responder_lng = ?, responder_loc_at = datetime('now')
+     WHERE id = ? AND responder_id = ? AND status = 'responding'`
+  ).run(la, ln, req.params.id, req.session.user.id);
+  if (!r.changes) return res.status(409).json({ ok: false });
   res.json({ ok: true });
 });
 

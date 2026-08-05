@@ -54,6 +54,11 @@ addCol("ALTER TABLE incidents ADD COLUMN sos INTEGER NOT NULL DEFAULT 0");
 addCol("ALTER TABLE incidents ADD COLUMN is_guest INTEGER NOT NULL DEFAULT 0");
 addCol("ALTER TABLE incidents ADD COLUMN guest_phone TEXT DEFAULT NULL");
 addCol("ALTER TABLE incidents ADD COLUMN needs TEXT DEFAULT NULL"); // JSON list of resource needs with amounts
+addCol("ALTER TABLE incidents ADD COLUMN delivered INTEGER NOT NULL DEFAULT 0"); // supplies delivered flag
+addCol("ALTER TABLE incidents ADD COLUMN delivered_at TEXT DEFAULT NULL");
+addCol("ALTER TABLE incidents ADD COLUMN responder_lat REAL DEFAULT NULL"); // live volunteer location
+addCol("ALTER TABLE incidents ADD COLUMN responder_lng REAL DEFAULT NULL");
+addCol("ALTER TABLE incidents ADD COLUMN responder_loc_at TEXT DEFAULT NULL"); // last location update time
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS broadcasts (

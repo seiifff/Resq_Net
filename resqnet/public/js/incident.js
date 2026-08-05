@@ -65,6 +65,29 @@
       }
     }
 
+    // ---- Incident summary panel (what it is, what they need, risk level) ----
+    document.getElementById("summaryBox")?.remove();
+    {
+      const RISK = { 1: ["Low", "#2DD4BF"], 2: ["Moderate", "#F5A524"], 3: ["High / Severe", "#E5484D"] };
+      const [riskLabel, riskColor] = RISK[i.severity] || RISK[1];
+      let needsLine = "No specific supplies requested.";
+      if (i.needs) {
+        let list; try { list = JSON.parse(i.needs); } catch { list = null; }
+        if (list && list.length) needsLine = list.map((n) => `${(n.item||"").replace(/</g,"&lt;")}${n.qty ? " (" + (n.qty+"").replace(/</g,"&lt;") + ")" : ""}`).join(", ");
+      }
+      const box = document.createElement("div");
+      box.id = "summaryBox";
+      box.style.cssText = "margin:14px 0;padding:16px;border:1px solid var(--glass-line);background:var(--card);border-radius:12px";
+      box.innerHTML =
+        `<div style="font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Incident summary</div>
+         <div style="font-size:14.5px;line-height:1.6">
+           <div style="margin-bottom:7px"><strong>${NAME[i.type] || i.type}</strong>${i.description ? " — " + i.description.replace(/</g,"&lt;") : ""}</div>
+           <div style="margin-bottom:7px">📦 <span style="color:var(--muted)">Needs:</span> ${needsLine}</div>
+           <div>🔥 <span style="color:var(--muted)">Risk level (heatmap):</span> <strong style="color:${riskColor}">${riskLabel}</strong></div>
+         </div>`;
+      document.getElementById("meta").after(box);
+    }
+
     if (i.photo) {
       const ph = document.getElementById("photo");
       ph.src = "/uploads/" + i.photo; ph.style.display = "block";
@@ -104,6 +127,20 @@
         a.appendChild(mk("btn-amber", "📍 Check in", async () => {
           if ((await api(`/api/incidents/${id}/checkin`, { method: "POST" })).ok) { window.toast&&toast("Checked in — status updated","ok"); load(); }
         }));
+        // Mark supplies delivered (only meaningful when supplies were requested)
+        if (i.needs && !i.delivered) {
+          a.appendChild(mk("btn-teal", "📦 Mark supplies delivered", async () => {
+            if ((await api(`/api/incidents/${id}/delivered`, { method: "POST" })).ok) { window.toast&&toast("Marked delivered — citizen and organisation notified","ok"); load(); }
+          }));
+        }
+      }
+      if (i.delivered) {
+        const dv = document.createElement("div");
+        dv.className = "countdown";
+        dv.style.cssText = "border-color:var(--green);background:var(--green-bg)";
+        const when = i.delivered_at ? new Date(i.delivered_at + "Z").toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "";
+        dv.innerHTML = `✅ <b>Supplies delivered</b>${when ? " · " + when : ""} — citizen and organisation notified.`;
+        a.appendChild(dv);
       }
       const row = document.createElement("div"); row.className = "row";
       row.appendChild(mk("btn-teal", "✓ Resolve — genuine report", async () => {
@@ -169,6 +206,56 @@
     });
     loadChat();
   });
+
+  // ---- Live responder location tracking ----
+  // If I'm the active responder, my browser posts GPS every few seconds while
+  // this page is open. Everyone viewing sees the responder move on a mini-map.
+  let trackMap = null, trackMarker = null, iAmSharing = false;
+  function initTrackMap(lat, lng) {
+    if (trackMap) return;
+    trackMap = L.map("trackMap", { zoomControl: true, attributionControl: false }).setView([lat, lng], 14);
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", { maxZoom: 19 }).addTo(trackMap);
+  }
+  function showResponderOnMap(lat, lng, atText) {
+    document.getElementById("trackWrap").style.display = "block";
+    initTrackMap(lat, lng);
+    setTimeout(() => trackMap && trackMap.invalidateSize(), 100);
+    if (!trackMarker) {
+      const icon = L.divIcon({ className: "", html: '<div style="width:20px;height:20px;border-radius:50%;background:#2DD4BF;border:3px solid #fff;box-shadow:0 0 0 4px rgba(45,212,191,.35)"></div>', iconSize: [20, 20], iconAnchor: [10, 10] });
+      trackMarker = L.marker([lat, lng], { icon }).addTo(trackMap);
+    } else {
+      trackMarker.setLatLng([lat, lng]);
+    }
+    trackMap.panTo([lat, lng]);
+    document.getElementById("trackMeta").textContent = atText || "";
+  }
+
+  async function trackTick() {
+    try {
+      const r = await fetch(`/api/incidents/${id}`);
+      if (!r.ok) return;
+      const { incident: i } = await r.json();
+      if (!i || i.status !== "responding") { document.getElementById("trackWrap").style.display = "none"; return; }
+
+      // Am I the active responder? Then share my location.
+      if (viewer && viewer.is_responder && navigator.geolocation) {
+        if (!iAmSharing) { iAmSharing = true; document.getElementById("trackLabel").textContent = "Sharing your live location with the citizen & organisation"; }
+        navigator.geolocation.getCurrentPosition(async (p) => {
+          await fetch(`/api/incidents/${id}/location`, {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ lat: p.coords.latitude, lng: p.coords.longitude }),
+          });
+          showResponderOnMap(p.coords.latitude, p.coords.longitude, "You are sharing your live location.");
+        }, () => {}, { enableHighAccuracy: true, maximumAge: 4000 });
+      } else if (i.responder_lat && i.responder_lng) {
+        // I'm the citizen/admin — show the responder's last-known location.
+        const at = i.responder_loc_at ? "Updated " + new Date(i.responder_loc_at + "Z").toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) : "";
+        showResponderOnMap(i.responder_lat, i.responder_lng, at + " · responder en route");
+      }
+    } catch {}
+  }
+  trackTick();
+  setInterval(trackTick, 5000);
 
   load().then(loadChat);
   setInterval(loadChat, 4000);

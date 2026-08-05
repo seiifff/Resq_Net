@@ -14,6 +14,9 @@
 .tcard.on{border-color:var(--red);background:var(--red-bg);transform:translateY(-1px)}.tcard:hover{border-color:var(--red)}
 .needBox{border:1.5px solid var(--amber);border-radius:16px;background:linear-gradient(180deg,rgba(245,165,36,.10),rgba(245,165,36,.03));padding:20px;margin-bottom:16px;display:none;animation:needIn .35s ease both;overflow:hidden}
 .needBox.show{display:block}
+.photo-drop{display:block;border:1.5px dashed var(--glass-line);border-radius:12px;padding:16px;text-align:center;cursor:pointer;color:var(--ink-2);font:600 14px var(--sans);transition:border-color .15s,color .15s}
+.photo-drop:hover{border-color:var(--red);color:var(--red)}
+.photo-drop.has{border-color:var(--green);color:var(--green);border-style:solid}
 @keyframes needIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .needBox-head{display:flex;gap:13px;align-items:flex-start;margin-bottom:16px}
 .needBox-ic{font-size:26px;line-height:1;flex:none}
@@ -65,6 +68,13 @@
       <div class="field"><label for="description">Details <span class="optional">(optional)</span></label>
         <textarea id="description" name="description" maxlength="500" placeholder="e.g. Water rising fast near the market, two people trapped…"></textarea></div>
 
+      <div class="field"><label for="photo">Photo of the scene <span class="optional">(optional — helps responders and adds credibility)</span></label>
+        <label class="photo-drop" id="photoDrop">
+          <input type="file" id="photo" name="photo" accept="image/*" capture="environment" hidden>
+          <span id="photoLabel">📷 Tap to attach a photo</span>
+        </label>
+      </div>
+
       <div class="needBox" id="needBox">
         <div class="needBox-head">
           <span class="needBox-ic">📦</span>
@@ -98,6 +108,14 @@
   let coords=null;
   const showErr=(list)=>{msg.innerHTML="<ul>"+list.map(e=>"<li>"+e+"</li>").join("")+"</ul>";msg.classList.add("show");};
   const clearErr=()=>{msg.classList.remove("show");msg.innerHTML="";};
+
+  // photo picker label
+  const photoInput=document.getElementById("photo");
+  if(photoInput){photoInput.addEventListener("change",()=>{
+    const drop=document.getElementById("photoDrop"), lbl=document.getElementById("photoLabel");
+    if(photoInput.files[0]){drop.classList.add("has");lbl.textContent="✓ "+photoInput.files[0].name.slice(0,32);}
+    else{drop.classList.remove("has");lbl.textContent="📷 Tap to attach a photo";}
+  });}
 
   // type selection — also reveals the supply box
   document.querySelectorAll("#typeGrid .tcard").forEach(el=>el.addEventListener("click",()=>{
@@ -158,6 +176,8 @@
       if(item)needs.push({item,qty});
     });
     if(needs.length)fd.append("needs",JSON.stringify(needs));
+    const photoEl=document.getElementById("photo");
+    if(photoEl&&photoEl.files[0])fd.append("photo",photoEl.files[0]);
     try{
       const r=await fetch("/api/quick-report",{method:"POST",body:fd});
       const d=await r.json();
