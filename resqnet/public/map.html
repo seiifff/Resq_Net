@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Live incident map — ResQNet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="description" content="ResQNet — community emergency intelligence and response network for Sri Lanka. Report emergencies, respond as a volunteer, coordinate relief in real time."><link rel="stylesheet" href="/css/app.css">
+<style>
+html,body{height:100%}body{display:flex;flex-direction:column;overflow:hidden}
+.mbar{display:flex;align-items:center;gap:18px;padding:13px 22px;background:var(--card);border-bottom:1px solid var(--rule-2);z-index:500;flex-wrap:wrap}
+.mbar .brand{font-size:17px}
+.legend{display:flex;gap:16px;margin-left:8px;font-size:12.5px;color:var(--muted);flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:6px}.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.legend .r{background:#E5484D}.legend .y{background:#F5A524}.legend .g{background:#2DBA92}
+.mbar .right{margin-left:auto;display:flex;align-items:center;gap:14px}
+.live-chip{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--green);border:1px solid #B5D4C1;border-radius:999px;padding:5px 12px}
+.live-chip i{width:7px;height:7px;border-radius:50%;background:#2DBA92;animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(45,186,146,.5)}70%{box-shadow:0 0 0 7px rgba(45,186,146,0)}100%{box-shadow:0 0 0 0 rgba(45,186,146,0)}}
+.mbar a.link,.mbar button.link{color:var(--ink-2);font-size:13.5px;font-weight:600;background:none;border:none;cursor:pointer;font-family:var(--sans)}
+.mbar a.link:hover,.mbar button.link:hover{color:var(--red);text-decoration:none}
+#heatBtn{border:2px solid var(--amber);border-radius:999px;padding:10px 20px;font:700 14px var(--sans);color:var(--amber);background:rgba(245,165,36,.10);cursor:pointer;transition:all .15s;animation:heatpulse 2.6s ease-in-out infinite}
+#heatBtn:hover{background:rgba(245,165,36,.20)}
+#heatBtn.on{background:var(--amber);color:#1a1a1a;animation:none}
+@keyframes heatpulse{0%,100%{box-shadow:0 0 0 0 rgba(245,165,36,0)}50%{box-shadow:0 0 0 6px rgba(245,165,36,.22)}}
+/* heatmap legend panel — bigger */
+#heatLegend{position:absolute;left:22px;bottom:26px;z-index:600;background:rgba(20,14,18,.94);backdrop-filter:blur(12px);border:1px solid var(--glass-line);border-radius:14px;padding:18px 20px;box-shadow:0 14px 40px rgba(0,0,0,.5);width:260px}
+#heatLegend .hl-title{font:700 15px var(--sans);color:#fff;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+#heatLegend .hl-bar{height:16px;border-radius:8px;background:linear-gradient(90deg,#2DD4BF 0%,#F5A524 40%,#E5484D 65%,#8B0000 100%)}
+#heatLegend .hl-scale{display:flex;justify-content:space-between;font:600 11px var(--mono);color:rgba(255,255,255,.75);margin-top:7px}
+#heatLegend .hl-note{font-size:11.5px;color:rgba(255,255,255,.55);margin-top:11px;line-height:1.5}
+#heatLegend .hl-count{font-size:12px;color:var(--amber);margin-top:9px;line-height:1.5;font-weight:600}
+#map{flex:1;background:#EDEBE4}
+.pin-marker{position:relative}
+.pin-marker .core{width:16px;height:16px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 1px 6px rgba(0,0,0,.4),0 0 0 1px rgba(0,0,0,.12)}
+.pin-marker .halo{position:absolute;inset:-8px;border-radius:50%;animation:halo 2s ease-out infinite}
+@keyframes halo{0%{transform:scale(.5);opacity:.7}100%{transform:scale(1.4);opacity:0}}
+.pin-marker.active .core{background:#E5484D}.pin-marker.active .halo{background:rgba(229,72,77,.4)}
+.pin-marker.responding .core{background:#F5A524}.pin-marker.responding .halo{background:rgba(245,165,36,.35)}
+.pin-marker.resolved .core{background:#2DBA92}.pin-marker.resolved .halo{display:none}
+.pin-marker.sos .core{background:#E5484D;width:24px;height:24px;border:3px solid #fff;box-shadow:0 0 0 3px rgba(229,72,77,.4),0 2px 10px rgba(0,0,0,.4)}
+.pin-marker.sos .halo{background:rgba(229,72,77,.5);inset:-12px}
+.pin-marker.sos .tag{position:absolute;top:-20px;left:50%;transform:translateX(-50%);background:#E5484D;color:#fff;font:700 9px var(--sans);letter-spacing:.08em;padding:2px 6px;border-radius:4px;white-space:nowrap}
+.leaflet-popup-content-wrapper{background:rgba(28,20,24,.96);backdrop-filter:blur(12px);color:#fff;border-radius:12px;font-family:var(--sans);box-shadow:0 14px 40px rgba(0,0,0,.5);border:1px solid var(--glass-line)}
+.leaflet-popup-tip{background:rgba(28,20,24,.96)}.leaflet-popup-content{margin:14px 16px;font-size:13px;line-height:1.5}
+.pop-type{font-family:var(--serif);font-weight:700;font-size:15px;color:#fff}
+.pop-meta{color:rgba(255,255,255,.6);font-size:11.5px;margin:2px 0 8px;font-family:var(--mono)}
+.leaflet-popup-close-button{color:rgba(255,255,255,.6)!important}
+.pop-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.pop-badge{font-family:var(--mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;border-radius:6px;padding:3px 9px;font-weight:500}
+.pop-badge.active{background:#F7EAE7;color:#992D22}.pop-badge.responding{background:#F6EEDD;color:#B8791A}.pop-badge.resolved{background:#E7F0EA;color:#3B7A57}
+.pop-badge.sev{background:var(--paper);color:var(--ink-2)}.pop-badge.res{background:#E7F0EA;color:#3B7A57}
+.leaflet-popup-content img{max-width:220px;border-radius:8px;margin-top:8px;display:block}
+@media(max-width:640px){.mbar{gap:8px;padding:10px 12px}.mbar .brand{font-size:15px}.mbar .right{margin-left:0;width:100%;justify-content:flex-start;flex-wrap:wrap;gap:10px}.legend{gap:9px;margin-left:0;font-size:11px}.legend span{gap:4px}#heatBtn{padding:5px 10px}}
+</style></head><body>
+<div class="mbar">
+  <a href="/" class="brand"><span class="mk">✚</span> Res<span class="q">Q</span>Net</a>
+  <div class="legend"><span><i class="r"></i> Active</span><span><i class="y"></i> Responding</span><span><i class="g"></i> Resolved</span></div>
+  <div class="right"><span class="live-chip"><i></i> Live · <span id="count">0</span> incidents</span>
+    <button class="link" id="heatBtn" style="display:none">🔥 Risk heatmap</button>
+    <a class="link" href="/report">+ Report</a><a class="link" href="/dashboard">Dashboard</a></div>
+</div>
+<div id="heatLegend" style="display:none">
+  <div class="hl-title">🔥 Risk level</div>
+  <div class="hl-bar"></div>
+  <div class="hl-scale"><span>Low</span><span>Moderate</span><span>High</span><span>Severe</span></div>
+  <div class="hl-note">Weighted by incident severity and recency</div>
+  <div class="hl-count" id="heatCount">Loading…</div>
+</div>
+<div id="map"></div>
+<script src="/vendor/leaflet/leaflet.js"></script>
+<script src="/vendor/leaflet/leaflet-heat.js"></script>
+<script src="/js/mapview.js"></script>
+</body></html>

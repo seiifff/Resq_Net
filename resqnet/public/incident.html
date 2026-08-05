@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Incident — ResQNet</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="description" content="ResQNet — community emergency intelligence and response network for Sri Lanka. Report emergencies, respond as a volunteer, coordinate relief in real time."><link rel="stylesheet" href="/css/app.css">
+<style>
+.iwrap{max-width:1240px;margin:0 auto;padding:30px 5vw 70px;display:grid;grid-template-columns:0.85fr 1.15fr;gap:22px;align-items:start}
+.headrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.headrow h1{font-family:var(--serif);font-weight:600;font-size:24px}
+.meta{color:var(--muted);font-size:13px;font-family:var(--mono);margin-bottom:14px}
+.desc{font-size:14.5px;margin-bottom:14px}.photo{width:100%;border-radius:10px;margin-top:6px}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 4px}
+.actions{display:flex;flex-direction:column;gap:10px;margin-top:16px}.actions .row{display:flex;gap:10px}
+.btn-teal{background:var(--green);color:#fff}.btn-teal:hover{background:#2f6446;color:#fff}
+.btn-amber{background:var(--amber);color:#fff}.btn-amber:hover{filter:brightness(1.05);color:#fff}
+.btn-danger-ghost{background:var(--red-bg);color:var(--red-d);border:1px solid #E4B4AD}
+.countdown{font-size:12.5px;color:var(--muted)}.countdown b{color:var(--amber)}
+.chat{display:flex;flex-direction:column;height:min(78vh,760px);min-height:560px}
+.chat .ey{font-size:15px;margin-bottom:14px;display:flex;align-items:center;gap:9px}
+.chat .ey::before{content:"💬";font-size:19px}
+.chat-log{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:14px;padding:12px 6px}
+.bubble{max-width:78%;padding:14px 18px;border-radius:18px;font-size:16px;line-height:1.55}
+.bubble .who{font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;letter-spacing:.05em}
+.bubble .time{font-size:10.5px;color:var(--faint);margin-top:5px;font-family:var(--mono)}
+.bubble.me{align-self:flex-end;background:var(--red-bg);border:1px solid #E4B4AD;border-bottom-right-radius:5px}
+.bubble.them{align-self:flex-start;background:rgba(255,255,255,.08);border:1px solid var(--glass-line);border-bottom-left-radius:5px}
+.chat-input{display:flex;gap:12px;margin-top:16px}.chat-input .field{flex:1;margin:0}
+.chat-input input{font-size:16px;padding:16px 18px}
+.chat-input .btn{width:auto;padding:16px 30px;font-size:16px}
+.chat-empty{color:var(--muted);font-size:15px;text-align:center;margin:auto;max-width:28ch;line-height:1.6}
+.pop-badge,.badge.sev{}
+@media(max-width:860px){.iwrap{grid-template-columns:1fr}.chat{height:min(70vh,600px);min-height:440px}}
+</style></head><body>
+<div class="ticker"><span class="dot"></span> ResQNet network — online <span class="sep">/</span> Incident <span class="right"><a href="/map" style="color:inherit">Live map</a> · <a href="/dashboard" style="color:inherit">Dashboard</a></span></div>
+<nav class="nav"><a href="/dashboard" class="brand"><span class="mk">✚</span> Res<span class="q">Q</span>Net</a>
+  <div class="links"><a href="/map">Live map</a><a href="/dashboard">Dashboard</a></div></nav>
+<div class="iwrap">
+  <div class="panel">
+    <div class="headrow"><h1 id="title">Loading…</h1><span class="badge admin" id="statusBadge">—</span></div>
+    <div class="meta" id="meta"></div><div class="desc" id="desc"></div><div class="kv" id="kv"></div>
+    <img class="photo" id="photo" style="display:none" alt="Incident photo"><div class="actions" id="actions"></div>
+  </div>
+  <div class="panel chat"><span class="ey">Incident chat</span>
+    <div class="chat-log" id="chatLog"><div class="chat-empty">Loading messages…</div></div>
+    <form class="chat-input" id="chatForm" style="display:none"><div class="field"><input type="text" id="chatBody" maxlength="500" placeholder="Type a message…" autocomplete="off"></div><button class="btn btn-red" type="submit">Send</button></form>
+  </div>
+</div>
+<script src="/js/incident.js"></script><script src="/js/toast.js"></script>
+</body></html>

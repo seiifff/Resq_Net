@@ -1,0 +1,89 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Become a volunteer — ResQNet</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="description" content="ResQNet — community emergency intelligence and response network for Sri Lanka. Report emergencies, respond as a volunteer, coordinate relief in real time."><link rel="stylesheet" href="/css/app.css">
+<style>
+.vhero{max-width:1000px;margin:0 auto;padding:6vh 5vw 3vh;display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center}
+.vhero h1{font-family:var(--serif);font-weight:700;font-size:clamp(34px,5vw,54px);line-height:1.02;letter-spacing:-.02em;margin-bottom:18px}
+.vhero h1 em{font-style:italic;color:var(--red)}
+.vhero .lead{color:var(--ink-2);font-size:16.5px;max-width:46ch;margin-bottom:24px}
+.vstats{border:1px solid var(--rule-2);border-radius:14px;background:var(--card);overflow:hidden}
+.vstats .s{display:flex;align-items:baseline;gap:14px;padding:18px 22px;border-bottom:1px solid var(--rule)}
+.vstats .s:last-child{border-bottom:none}
+.vstats .n{font-family:var(--serif);font-weight:700;font-size:34px;min-width:80px}
+.vstats .n.red{color:var(--red)}.vstats .n.green{color:var(--green)}
+.vstats .l{font-size:13px;color:var(--muted)}
+.vsteps{max-width:1000px;margin:0 auto;padding:10px 5vw 30px}
+.vskills{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.vskill{border:1px solid var(--rule-2);border-radius:999px;background:var(--card);padding:9px 16px;font-size:13.5px;display:inline-flex;align-items:center;gap:8px}
+.vskill .i{font-size:16px}
+.vcta{max-width:1000px;margin:0 auto;padding:20px 5vw 70px;text-align:center}
+.vcta .btn{width:auto;padding:15px 34px;font-size:16px}
+@media(max-width:900px){.vhero{grid-template-columns:1fr;gap:30px}}
+</style></head><body>
+<div class="ticker"><span class="dot"></span> ResQNet network — online <span class="sep">/</span> Volunteer with us <span class="right">Emergency: 117</span></div>
+<nav class="nav"><a href="/" class="brand"><span class="mk">✚</span> Res<span class="q">Q</span>Net</a>
+  <div class="links"><a href="/#how">How it works</a><a href="/feed">Transparency</a><span class="btns"><a class="btn btn-line keep" href="/login">Sign in</a></span></div></nav>
+
+<header class="vhero">
+  <div class="rise">
+    <span class="kick">Join the response network</span>
+    <h1>Be the help that <em>arrives first.</em></h1>
+    <p class="lead">When an emergency happens, the people closest to it save the most lives. As a ResQNet volunteer you receive alerts matched to your skills and your district — and you decide when to respond. No obligation, no shifts. Just be ready when your community needs you.</p>
+    <a class="btn btn-red" href="/register" style="width:auto;padding:14px 30px">Become a volunteer →</a>
+  </div>
+  <aside class="vstats rise-2">
+    <div class="s"><span class="n red" id="sVol">—</span><span class="l">volunteers on the network</span></div>
+    <div class="s"><span class="n green" id="sResolved">—</span><span class="l">incidents resolved together</span></div>
+    <div class="s"><span class="n" id="sDistricts">—</span><span class="l">districts covered island-wide</span></div>
+  </aside>
+</header>
+
+<section class="section alt"><div class="inner">
+  <div class="shead"><span class="k">Why volunteer</span><h2>Your skills, where they matter.</h2>
+  <p>You'll only ever be alerted for emergencies that match what you can actually do.</p></div>
+  <div class="grid3">
+    <div class="cell"><div class="idx">01</div><h3>Skill-matched alerts</h3><p>Tell us your skills once. A flood-response volunteer never gets a fire alert — you only see what you're trained for.</p></div>
+    <div class="cell"><div class="idx">02</div><h3>Right in your district</h3><p>Alerts are local to you. You respond to emergencies near you, where you can actually make a difference fast.</p></div>
+    <div class="cell"><div class="idx">03</div><h3>You're in control</h3><p>See an alert, choose to respond or not. Check in as you go. No fixed hours, no pressure — help on your terms.</p></div>
+  </div>
+</div></section>
+
+<section class="vsteps">
+  <div class="shead"><span class="k">Skills we need</span><h2>Every skill counts.</h2></div>
+  <div class="vskills">
+    <span class="vskill"><span class="i">🩺</span> Medical / First Aid</span>
+    <span class="vskill"><span class="i">🔦</span> Search &amp; Rescue</span>
+    <span class="vskill"><span class="i">🔥</span> Fire Safety</span>
+    <span class="vskill"><span class="i">🌊</span> Flood Response</span>
+    <span class="vskill"><span class="i">🚚</span> Logistics &amp; Transport</span>
+    <span class="vskill"><span class="i">📡</span> Communications</span>
+  </div>
+  <p style="color:var(--muted);font-size:14px;margin-top:16px">No formal training? You can still help — Logistics, Transport and Communications volunteers are always needed.</p>
+</section>
+
+<section class="vcta">
+  <div class="shead" style="max-width:none"><span class="k">Ready?</span><h2 style="margin-bottom:16px">Join in under a minute.</h2></div>
+  <a class="btn btn-red" href="/register">Become a volunteer →</a>
+  <p style="color:var(--muted);font-size:13px;margin-top:14px">Already registered? <a href="/login">Sign in to your dashboard</a></p>
+</section>
+
+<footer class="foot"><div class="inner">
+  <div><h4>Contact</h4><p class="big">Emergency: 117</p><p class="big" style="margin-bottom:10px">Ambulance: 1990</p><p>ResQNet Project Team<br>SLIIT, Sri Lanka</p></div>
+  <div><h4>Platform</h4><ul><li><a href="/register">Join the network</a></li><li><a href="/quick-report">Report an emergency</a></li><li><a href="/feed">Transparency feed</a></li></ul></div>
+  <div><h4>Our client</h4><p>Built in partnership with the Sri Lanka Red Cross Society.</p></div>
+</div><div class="credit">ResQNet — Community Emergency Intelligence &amp; Response Network · SLIIT · CIS047-3</div></footer>
+
+<script>
+(async()=>{
+  try{
+    const s=await fetch("/api/recruit-stats").then(r=>r.json());
+    const set=(id,val)=>{const el=document.getElementById(id);const end=+val||0;let n=0;const step=Math.max(1,Math.ceil(end/16));const t=setInterval(()=>{n+=step;if(n>=end){n=end;clearInterval(t);}el.textContent=n;},32);};
+    set("sVol",Math.max(s.volunteers,0));
+    set("sResolved",s.resolved);
+    set("sDistricts",s.districts);
+  }catch{
+    document.getElementById("sVol").textContent="—";
+  }
+})();
+</script><script src="/js/toast.js"></script>
+</body></html>

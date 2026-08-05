@@ -1,0 +1,95 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Report an emergency — ResQNet</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="description" content="ResQNet — community emergency intelligence and response network for Sri Lanka. Report emergencies, respond as a volunteer, coordinate relief in real time."><link rel="stylesheet" href="/css/app.css">
+<style>
+.tgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.tcard{border:1px solid var(--rule-2);border-radius:10px;background:var(--paper-2);padding:14px 8px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;position:relative}
+.tcard input{position:absolute;opacity:0;pointer-events:none;left:0;top:0;width:1px;height:1px}
+.tcard .ic{font-size:22px}.tcard .nm{font-weight:600;font-size:12.5px;margin-top:5px;font-family:var(--serif)}
+.tcard.on{border-color:var(--red);background:var(--red-bg)}.tcard:hover{border-color:var(--red)}
+.chips{display:flex;flex-wrap:wrap;gap:9px}
+.chip{border:1px solid var(--rule-2);border-radius:999px;background:var(--paper-2);padding:8px 16px;font-size:13px;cursor:pointer;transition:border-color .15s,background .15s;position:relative;display:inline-flex;align-items:center;gap:7px}
+.chip input{position:absolute;opacity:0;pointer-events:none;left:0;top:0;width:1px;height:1px}
+.chip.on{border-color:var(--green);background:var(--green-bg)}
+.needToggle{display:flex;gap:10px}
+/* Prominent supply-request box — appears after a disaster type is chosen */
+.needBox{border:1.5px solid var(--amber);border-radius:16px;background:linear-gradient(180deg,rgba(245,165,36,.10),rgba(245,165,36,.03));padding:20px;margin-top:4px;display:none;animation:needIn .35s ease both;overflow:hidden}
+.needBox.show{display:block}
+@keyframes needIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.needBox-head{display:flex;gap:13px;align-items:flex-start;margin-bottom:16px}
+.needBox-ic{font-size:26px;line-height:1;flex:none}
+.needBox-title{font-family:var(--serif);font-weight:700;font-size:18px;color:#fff}
+.needBox-sub{font-size:13px;color:var(--ink-2);margin-top:3px;line-height:1.5}
+.quickchips{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:14px}
+.qchip{border:1.5px solid var(--glass-line);border-radius:999px;background:rgba(255,255,255,.06);color:var(--ink);padding:9px 15px;font:600 13.5px var(--sans);cursor:pointer;transition:all .14s}
+.qchip:hover{border-color:var(--amber);color:var(--amber)}
+.qchip.on{background:var(--amber);border-color:var(--amber);color:#1a1a1a}
+.needRow{display:flex;gap:8px;margin-bottom:10px;align-items:center;animation:needIn .25s ease both}
+.needRow input.item{flex:2;min-width:0}.needRow input.qty{flex:1;min-width:0}
+.needRow .rm{border:1px solid var(--glass-line);background:none;color:var(--muted);border-radius:8px;width:42px;height:44px;cursor:pointer;font-size:18px;flex:none;padding:0}
+.needRow .rm:hover{border-color:var(--red);color:var(--red)}
+.gps{display:flex;align-items:center;gap:12px;border:1px solid var(--rule-2);border-radius:8px;background:var(--paper-2);padding:12px 14px;font-size:13.5px}
+.gps .d{width:9px;height:9px;border-radius:50%;flex:none;background:var(--amber)}
+.gps.ok .d{background:var(--green)}.gps.fail .d{background:var(--red)}
+.gps .retry{margin-left:auto;background:none;border:1px solid var(--rule-2);color:var(--ink);border-radius:7px;padding:5px 12px;font:600 12px var(--sans);cursor:pointer}
+.gps .retry:hover{border-color:var(--red);color:var(--red)}
+.drop{border:1px dashed var(--rule-2);border-radius:10px;background:var(--paper-2);padding:16px;text-align:center;cursor:pointer;font-size:13.5px;color:var(--muted)}
+.drop:hover{border-color:var(--red)}.drop img{max-width:100%;max-height:160px;border-radius:8px;margin-top:10px}.drop input{display:none}
+</style></head><body>
+<div class="ticker"><span class="dot"></span> ResQNet network — online <span class="sep">/</span> Report <span class="right">Emergency: 117</span></div>
+<nav class="nav"><a href="/" class="brand"><span class="mk">✚</span> Res<span class="q">Q</span>Net</a>
+  <div class="links"><a href="/dashboard">Dashboard</a><a href="/map">Live map</a></div></nav>
+
+<main class="app" style="max-width:640px">
+  <div class="ahead rise"><h1>Report an emergency</h1></div>
+  <p class="asub">Your location is captured automatically. Help will see this instantly.</p>
+  <div class="panel rise-2">
+    <div class="msg error" id="msg" role="alert"></div>
+    <form id="reportForm" novalidate>
+      <div class="field"><label>Emergency type</label>
+        <div class="tgrid" id="typeGrid">
+          <label class="tcard" data-v="flood"><input type="radio" name="type" value="flood"><div class="ic">🌊</div><div class="nm">Flood</div></label>
+          <label class="tcard" data-v="fire"><input type="radio" name="type" value="fire"><div class="ic">🔥</div><div class="nm">Fire</div></label>
+          <label class="tcard" data-v="accident"><input type="radio" name="type" value="accident"><div class="ic">🚗</div><div class="nm">Accident</div></label>
+          <label class="tcard" data-v="medical"><input type="radio" name="type" value="medical"><div class="ic">🚑</div><div class="nm">Medical</div></label>
+        </div></div>
+      <div class="field"><label>Your location</label>
+        <div class="gps" id="gpsBox"><span class="d"></span><span id="gpsText">Getting your location…</span><button type="button" class="retry" id="gpsRetry">Retry</button></div></div>
+      <div class="field"><label for="description">What's happening? <span style="text-transform:none;font-weight:400">(optional)</span></label>
+        <textarea id="description" name="description" maxlength="500" placeholder="e.g. Water rising fast, two families trapped on upper floor…"></textarea></div>
+      <div class="field"><label>What do you need? <span style="text-transform:none;font-weight:400">(optional)</span></label>
+        <div class="chips" id="resRow">
+          <label class="chip" data-v="water"><input type="radio" name="resource" value="water">💧 Water</label>
+          <label class="chip" data-v="medical"><input type="radio" name="resource" value="medical">🩺 Medical help</label>
+          <label class="chip" data-v="evacuation"><input type="radio" name="resource" value="evacuation">🚤 Evacuation</label>
+          <label class="chip" data-v="food"><input type="radio" name="resource" value="food">🍞 Food</label>
+        </div></div>
+
+      <div class="needBox" id="needBox">
+        <div class="needBox-head">
+          <span class="needBox-ic">📦</span>
+          <div>
+            <div class="needBox-title">Do you need any supplies?</div>
+            <div class="needBox-sub">Tap what you need and enter how much. This helps organisations send the right amounts to your area.</div>
+          </div>
+        </div>
+        <div class="quickchips" id="quickChips">
+          <button type="button" class="qchip" data-item="Water">💧 Water</button>
+          <button type="button" class="qchip" data-item="Food">🍞 Food</button>
+          <button type="button" class="qchip" data-item="Medical kits">🩺 Medical</button>
+          <button type="button" class="qchip" data-item="Blankets">🛏️ Blankets</button>
+          <button type="button" class="qchip" data-item="Rescue boat">🚤 Rescue</button>
+          <button type="button" class="qchip" data-item="Drinking cups">➕ Other</button>
+        </div>
+        <div id="needsList"></div>
+        <p class="hint" id="needHint" style="margin-top:4px;display:none">Enter an amount for each item (e.g. 50 bottles, 30, 5 kits).</p>
+      </div>
+      <div class="field"><label>Photo <span style="text-transform:none;font-weight:400">(optional, max 5 MB)</span></label>
+        <label class="drop" id="photoDrop"><span id="photoText">📷 Tap to attach a photo of the scene</span>
+          <img id="photoPreview" style="display:none" alt="Preview"><input type="file" id="photo" name="photo" accept="image/jpeg,image/png,image/webp"></label></div>
+      <button class="btn btn-red btn-block" type="submit" id="submitBtn">Send report</button>
+    </form>
+  </div>
+</main>
+<script src="/js/report.js"></script><script src="/js/toast.js"></script>
+</body></html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Join — ResQNet</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="description" content="ResQNet — community emergency intelligence and response network for Sri Lanka. Report emergencies, respond as a volunteer, coordinate relief in real time."><link rel="stylesheet" href="/css/app.css">
+</head><body>
+<div class="ticker"><span class="dot"></span> ResQNet network — online <span class="sep">/</span> Sri Lanka <span class="right">Emergency: 117</span></div>
+<div class="authwrap">
+  <nav class="nav"><a href="/" class="brand"><span class="mk">✚</span> Res<span class="q">Q</span>Net</a>
+    <div class="links"><a href="/#how">How it works</a><a href="/feed">Transparency</a><span class="btns"><a class="btn btn-line keep" href="/login">Sign in</a></span></div></nav>
+  <div class="authmid">
+    <div class="authpitch rise"><span class="kick">Join the network</span>
+      <h1>Someone nearby<br>will need <em>help.</em></h1>
+      <p>Report emergencies as a citizen, or register as a volunteer and receive alerts matched to your skills and district.</p>
+    </div>
+    <div class="card wide rise-2" style="max-width:520px">
+      <h2>Create your account</h2><p class="sub">It takes less than a minute.</p>
+      <div class="msg error" id="msg" role="alert"></div>
+      <form id="registerForm" novalidate>
+        <div class="field"><label>I want to</label>
+          <div class="roles">
+            <label class="role on" data-role="citizen"><input type="radio" name="role" value="citizen" checked><div class="ic">📢</div><div class="nm">Report emergencies</div><div class="ds">Citizen — report incidents and request help</div></label>
+            <label class="role" data-role="volunteer"><input type="radio" name="role" value="volunteer"><div class="ic">🛟</div><div class="nm">Respond to alerts</div><div class="ds">Volunteer — get alerts matched to your skills</div></label>
+          </div></div>
+        <div class="field"><label for="full_name">Full name</label><input type="text" id="full_name" name="full_name" placeholder="Your full name" autocomplete="name" required></div>
+        <div class="row2">
+          <div class="field"><label for="email">Email</label><input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required></div>
+          <div class="field"><label for="phone">Phone</label><input type="tel" id="phone" name="phone" placeholder="07XXXXXXXX" autocomplete="tel" required></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="password">Password</label><input type="password" id="password" name="password" placeholder="Min 8 characters" autocomplete="new-password" required></div>
+          <div class="field"><label for="confirm">Confirm</label><input type="password" id="confirm" name="confirm" placeholder="Repeat password" autocomplete="new-password" required></div>
+        </div>
+        <p class="hint" style="margin:-8px 0 16px">At least 8 characters, with letters and numbers.</p>
+        <div class="volx" id="volExtras">
+          <div class="field"><label>Your skills <span style="text-transform:none;font-weight:400">(you'll only receive alerts that match)</span></label>
+            <div class="skills">
+              <label class="sk"><input type="checkbox" name="skills" value="Medical / First Aid"> Medical / First Aid</label>
+              <label class="sk"><input type="checkbox" name="skills" value="Search & Rescue"> Search &amp; Rescue</label>
+              <label class="sk"><input type="checkbox" name="skills" value="Fire Safety"> Fire Safety</label>
+              <label class="sk"><input type="checkbox" name="skills" value="Flood Response"> Flood Response</label>
+              <label class="sk"><input type="checkbox" name="skills" value="Logistics & Transport"> Logistics &amp; Transport</label>
+              <label class="sk"><input type="checkbox" name="skills" value="Communications"> Communications</label>
+            </div></div>
+          <div class="field"><label for="district">Your district</label><select id="district" name="district"><option value="">Select your district</option></select></div>
+        </div>
+        <button class="btn btn-red btn-block" type="submit" id="submitBtn">Join the network</button>
+      </form>
+      <p class="alt">Already on the network? <a href="/login">Sign in</a></p>
+    </div>
+  </div>
+</div>
+<script src="/js/auth.js"></script></body></html>

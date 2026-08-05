@@ -1,0 +1,120 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard — ResQNet</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="stylesheet" href="/css/app.css">
+<style>
+.d{max-width:820px;margin:0 auto;padding:32px 5vw 70px;position:relative}
+/* atmospheric layered background just for the dashboard */
+body.dash-bg{
+  background-image:
+    radial-gradient(1000px 600px at 80% -5%, rgba(226,59,46,.10), transparent 55%),
+    radial-gradient(800px 500px at 10% 15%, rgba(74,155,224,.06), transparent 50%),
+    radial-gradient(700px 700px at 50% 110%, rgba(255,138,61,.05), transparent 55%);
+}
+body.dash-bg::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.014) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.014) 1px,transparent 1px);
+  background-size:44px 44px;
+  mask-image:radial-gradient(circle at 50% 30%,#000,transparent 80%);
+}
+.hi{display:flex;align-items:center;gap:12px;margin-bottom:4px;flex-wrap:wrap}
+.hi h1{font-family:var(--serif);font-weight:700;font-size:26px}
+.hi .btn{margin-left:auto;width:auto;padding:8px 15px;font-size:13px}
+.sub{color:var(--muted);font-size:14px;margin-bottom:26px}
+/* big primary action */
+.act{display:block;border-radius:18px;padding:28px;text-decoration:none;transition:transform .15s,box-shadow .2s,border-color .15s;margin-bottom:14px;position:relative;overflow:hidden}
+.act:hover{transform:translateY(-3px);text-decoration:none}
+.act .big{font-family:var(--serif);font-weight:700;font-size:25px;display:flex;align-items:center;gap:13px;position:relative;z-index:1}
+.act .small{font-size:14px;margin-top:7px;opacity:.92;position:relative;z-index:1}
+.act.red{background:linear-gradient(135deg,#D8382B,#B21F16);color:#fff;box-shadow:0 12px 34px rgba(192,38,27,.35)}
+.act.red:hover{box-shadow:0 16px 44px rgba(192,38,27,.5)}
+.act.red::after{content:"";position:absolute;top:-40%;right:-10%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.14),transparent 70%)}
+.act.card{background:var(--card);border:1px solid var(--rule-2);color:var(--ink);box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.act.card:hover{border-color:var(--red);box-shadow:0 12px 30px rgba(0,0,0,.3)}
+.act.card .big{color:var(--ink)}.act.card .small{color:var(--muted)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.two{grid-template-columns:1fr}}
+/* sos strip */
+.sos{border:1px solid #E4B4AD;background:var(--red-bg);border-radius:14px;padding:16px;margin-bottom:14px}
+.sos .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
+.sosbtn{width:100%;border:none;cursor:pointer;border-radius:12px;padding:18px;background:var(--red);color:#fff;font:700 20px var(--serif);letter-spacing:.02em;animation:sospulse 2.4s ease-in-out infinite}
+.sosbtn small{display:block;font:400 12px var(--sans);opacity:.9;margin-top:4px}
+@keyframes sospulse{0%,100%{box-shadow:0 6px 20px rgba(192,57,43,.25)}50%{box-shadow:0 6px 34px rgba(192,57,43,.5)}}
+/* section */
+.sec{margin-top:26px}
+.sec h2{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.list{background:var(--card);border:1px solid var(--rule-2);border-radius:12px;padding:6px 18px}
+.empty{color:var(--muted);font-size:13.5px;padding:14px 0}
+.trust{display:inline-flex;align-items:baseline;gap:7px;font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:2px}
+.trust b{font-family:var(--serif);font-size:16px;color:var(--green)}
+/* prominent trust score card */
+.trustcard{display:flex;align-items:center;gap:18px;border:1px solid var(--glass-line);border-radius:16px;background:var(--glass);backdrop-filter:blur(14px);padding:18px 22px;margin-top:16px}
+.trustcard .ring{width:64px;height:64px;flex:none;position:relative;display:grid;place-items:center}
+.trustcard .ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.trustcard .ring .val{font-family:var(--serif);font-weight:700;font-size:20px;color:#fff}
+.trustcard .tinfo .tlabel{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.trustcard .tinfo .ttitle{font-family:var(--serif);font-weight:700;font-size:17px;color:#fff}
+.trustcard .tinfo .tdesc{font-size:12.5px;color:var(--ink-2);margin-top:3px;line-height:1.5;max-width:52ch}
+.trustcard .tstats{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.trustcard .tstat{font:600 11px var(--mono);padding:4px 9px;border-radius:6px;background:rgba(255,255,255,.06);color:var(--ink-2)}
+.trustcard .tstat.good{background:var(--green-bg);color:var(--green)}
+.trustcard .tstat.bad{background:var(--red-bg);color:var(--red)}
+.trustcard .tstat.neutral{background:rgba(255,255,255,.06);color:var(--muted)}
+.trustcard .tstat-load{font:500 11px var(--mono);color:var(--faint)}
+.trustcard .tstate{margin-left:auto;font:600 12px var(--mono);padding:6px 12px;border-radius:999px;flex:none}
+.trustcard .tstate.high{background:var(--green-bg);color:var(--green);border:1px solid var(--green)}
+.trustcard .tstate.mid{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber)}
+.trustcard .tstate.low{background:var(--red-bg);color:var(--red);border:1px solid var(--red)}
+@media(max-width:560px){.trustcard{flex-wrap:wrap}.trustcard .tstate{margin-left:0}}
+</style></head><body class="dash-bg">
+<div class="ticker"><span class="dot"></span> ResQNet network — online <span class="right" id="tickRight"></span></div>
+<nav class="nav"><a href="/" class="brand"><span class="mk">✚</span> Res<span class="q">Q</span>Net</a>
+  <div class="links"><a href="/map">Live map</a><a href="/feed">Transparency</a></div></nav>
+
+<main class="d">
+  <div class="hi"><h1 id="welcome">Welcome</h1><span class="badge citizen" id="roleBadge">—</span>
+    <button class="btn btn-line" id="logoutBtn">Sign out</button></div>
+  <div class="sub" id="sub"></div>
+
+  <!-- CITIZEN view -->
+  <div id="citizenView" style="display:none">
+    <a class="act red" href="/quick-report"><span class="big">🚨 Report an emergency</span><span class="small">Tap here — GPS is automatic. Help sees it instantly.</span></a>
+    <div class="sos" id="sosWrap">
+      <div class="lbl">In immediate danger?</div>
+      <button class="sosbtn" id="sosBtn">SOS<small>One tap alerts every nearby volunteer at once</small></button>
+      <div id="sosMsg"></div>
+    </div>
+    <a class="act card" href="/map"><span class="big">🗺️ Live map</span><span class="small">See every active emergency across Sri Lanka — with the 🔥 risk heatmap of high-risk zones.</span></a>
+    <div id="citTrust"></div>
+    <div class="sec" id="myReports" style="display:none"><h2>My reports</h2><div class="list" id="myReportsList"></div></div>
+  </div>
+
+  <!-- VOLUNTEER view -->
+  <div id="volunteerView" style="display:none">
+    <div class="sec" id="volActive" style="display:none;margin-top:0"><h2>Your active response</h2><div class="list" id="volActiveBody"></div></div>
+    <div class="sec" style="margin-top:0"><h2>Alerts near you</h2><div class="list" id="volAlertsList"><p class="empty">Loading…</p></div></div>
+    <div id="volOther" class="sec" style="display:none"><h2>Other active incidents</h2><div class="list" id="volOtherList"></div></div>
+    <a class="act card" href="/map" style="margin-top:14px"><span class="big">🗺️ Live map</span><span class="small">See all incidents on the map — with the 🔥 risk heatmap.</span></a>
+    <div id="volTrust"></div>
+    <div class="sec" id="volHistory" style="display:none"><h2>Your response history</h2><div class="list" id="volHistoryList"></div></div>
+  </div>
+
+  <!-- ADMIN view -->
+  <div id="adminView" style="display:none">
+    <a class="act red" href="/admin"><span class="big">📊 Open command dashboard</span><span class="small">Live KPIs, resource needs, deployment, broadcasts.</span></a>
+    <div class="two">
+      <a class="act card" href="/map"><span class="big">🗺️ Live map</span><span class="small">All incidents + risk heatmap.</span></a>
+      <a class="act card" href="/feed"><span class="big">📢 Public feed</span><span class="small">Resolved incidents, public record.</span></a>
+    </div>
+  </div>
+
+  <!-- broadcast banner (any role) -->
+  <div class="sos" id="bcBanner" style="display:none;border-color:#E4B4AD;margin-top:16px">
+    <div class="lbl">⚠ Emergency broadcast</div>
+    <p id="bcBody" style="font-size:14.5px"></p><p id="bcMeta" style="font-size:11.5px;color:var(--muted);margin-top:6px"></p>
+  </div>
+</main>
+
+<script src="/js/dashboard.js"></script>
+<script src="/js/toast.js"></script>
+</body></html>

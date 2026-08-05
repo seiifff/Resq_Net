@@ -1,0 +1,28 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Transparency feed — ResQNet</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="description" content="ResQNet — community emergency intelligence and response network for Sri Lanka. Report emergencies, respond as a volunteer, coordinate relief in real time."><link rel="stylesheet" href="/css/app.css">
+<style>.frow{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--rule);font-size:13.5px;flex-wrap:wrap}
+.frow:last-child{border-bottom:none}.frow strong{min-width:130px}.frow .d{min-width:100px;color:var(--muted)}
+.frow .t{color:var(--faint);font-size:12.5px;font-family:var(--mono)}.frow .rt{margin-left:auto;font-size:12px;color:var(--green);font-weight:600}
+.totals{display:flex;gap:14px;margin-bottom:20px;flex-wrap:wrap}.totals .panel{flex:1;min-width:180px;text-align:center}</style>
+</head><body>
+<div class="ticker"><span class="dot"></span> ResQNet network — online <span class="sep">/</span> Public record <span class="right">Emergency: 117</span></div>
+<nav class="nav"><a href="/" class="brand"><span class="mk">✚</span> Res<span class="q">Q</span>Net</a>
+  <div class="links"><a href="/#how">How it works</a><a href="/#safety">Safety</a><span class="btns"><a class="btn btn-line keep" href="/login">Sign in</a></span></div></nav>
+<main class="app" style="max-width:860px">
+  <div class="ahead rise"><h1>Transparency feed</h1></div>
+  <p class="asub">Every resolved incident on the network, published in anonymised form.</p>
+  <div class="totals rise-2">
+    <div class="panel"><span class="ey">Resolved</span><div class="big green" id="tRes">—</div><p>incidents resolved</p></div>
+    <div class="panel"><span class="ey">Speed</span><div class="big" id="tAvg">—</div><p>average response time</p></div>
+  </div>
+  <div class="panel rise-3"><span class="ey">Resolved incidents</span><div id="feedList"><p style="color:var(--muted);font-size:13.5px">Loading…</p></div></div>
+</main>
+<script>
+const NAME={flood:"🌊 Flood",fire:"🔥 Fire",accident:"🚗 Road accident",medical:"🚑 Medical"};
+(async()=>{const {feed,totals}=await fetch("/api/feed").then(r=>r.json());
+document.getElementById("tRes").textContent=totals?.resolved||0;
+document.getElementById("tAvg").textContent=totals?.avg_response_min!=null?totals.avg_response_min+" min":"—";
+document.getElementById("feedList").innerHTML=feed.length?feed.map(i=>{const w=new Date(i.resolved_at+"Z").toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
+return `<div class="frow"><strong>${NAME[i.type]}</strong><span class="d">${i.district||"—"}</span><span class="t">${w}</span>${i.false_report?'<span class="badge admin">false report</span>':'<span class="badge citizen">resolved</span>'}${!i.false_report&&i.response_min!=null?`<span class="rt">responded in ${i.response_min} min</span>`:""}</div>`}).join(""):'<p style="color:var(--muted);font-size:13.5px">No resolved incidents yet.</p>';})();
+</script></body></html>

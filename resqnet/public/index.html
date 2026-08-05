@@ -1,0 +1,85 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ResQNet — Emergency response for Sri Lanka</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="description" content="ResQNet — community emergency intelligence and response network for Sri Lanka. Report emergencies, respond as a volunteer, coordinate relief in real time."><link rel="stylesheet" href="/css/app.css">
+</head><body>
+<div class="ticker"><span class="dot"></span> ResQNet network — online <span class="sep">/</span> Sri Lanka <span class="right">Emergency: 117 · Ambulance: 1990</span></div>
+
+<nav class="nav">
+  <a href="/" class="brand"><span class="mk">✚</span> Res<span class="q">Q</span>Net</a>
+  <div class="links">
+    <a href="#safety">Safety</a><a href="#how">How it works</a><a href="/volunteer">Volunteer</a><a href="/feed">Transparency</a>
+    <span class="btns"><a class="btn btn-line keep" href="/login">Sign in</a><a class="btn btn-red keep" href="/register">Join</a></span>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="rise">
+    <span class="kick">Community emergency network</span>
+    <div class="weather-alert" id="weatherAlert" style="display:none"></div>
+    <h1>When minutes<br>decide <em>everything.</em></h1>
+    <p class="lead">ResQNet connects the citizens who witness an emergency, the volunteers who can respond, and the organisations who coordinate — on one live network across Sri Lanka.</p>
+    <form class="locbar" id="locForm" style="display:none"></form>
+    <div class="cta">
+      <a class="btn btn-red" href="/quick-report">🚨 Report an emergency</a>
+      <a class="btn btn-line" href="/login">Sign in</a>
+      <a class="btn btn-line" href="/volunteer">Join as volunteer</a>
+    </div>
+    <p class="mono" style="font-size:12px;color:var(--muted);margin-top:12px">No account needed to report — just tap and go.</p>
+    <div class="rule"></div>
+    <div class="stats">
+      <a class="stat" href="tel:117"><span class="n red">117</span><span class="l"><b>Emergency hotline — tap to call</b>Ambulance: 1990 (Suwa Seriya)</span></a>
+      <a class="stat" href="/volunteer"><span class="n">3</span><span class="l"><b>Connected roles</b>Citizen · Volunteer · Organisation</span></a>
+      <a class="stat" href="/feed"><span class="n">25</span><span class="l"><b>Districts covered</b>See resolved incidents →</span></a>
+    </div>
+  </div>
+  <a class="weather rise-2" href="/quick-report" aria-label="Weather in Colombo — report an emergency" style="text-decoration:none;color:inherit">
+    <div class="top">
+      <div class="city">Colombo</div><div class="when" id="wWhen">Today</div>
+      <div class="temp"><span id="wTemp">29</span><sup>°</sup></div>
+      <div class="cond"><span id="wIcon">⛈️</span> <span id="wCond">Thundershowers</span></div>
+    </div>
+    <div class="bottom">
+      <svg class="spark" viewBox="0 0 280 40" preserveAspectRatio="none"><polyline id="wSpark" points="0,28 40,20 80,11 120,13 160,9 200,17 240,19 280,26"/></svg>
+      <div class="spark-times" id="wTimes"><span>6am</span><span>10am</span><span>1pm</span><span>5pm</span><span>9pm</span></div>
+      <div class="days" id="wDays">
+        <div class="day"><div class="d">Fri</div><div class="i">⛈️</div><div class="t">29 24</div></div>
+        <div class="day"><div class="d">Sat</div><div class="i">🌧️</div><div class="t">28 24</div></div>
+        <div class="day"><div class="d">Sun</div><div class="i">🌧️</div><div class="t">28 25</div></div>
+        <div class="day"><div class="d">Mon</div><div class="i">⛅</div><div class="t">30 25</div></div>
+        <div class="day"><div class="d">Tue</div><div class="i">⛈️</div><div class="t">29 24</div></div>
+      </div>
+    </div>
+  </a>
+</header>
+
+<section class="section alt" id="how"><div class="inner">
+  <div class="shead"><span class="k">How it works</span><h2>Three people. One network.</h2>
+  <p>The citizen who reports, the volunteer who responds, and the organisation that coordinates — connected in real time.</p></div>
+  <div class="grid3">
+    <a class="cell report" href="/quick-report"><div class="idx">01 · Report</div><h3>Citizens report</h3><p>An emergency is reported in seconds — GPS captured automatically, a photo attached, and the need tagged: water, medical, evacuation.</p></a>
+    <a class="cell respond" href="/volunteer"><div class="idx">02 · Respond</div><h3>Volunteers respond</h3><p>Volunteers see only alerts matching their skills and district, claim an incident, and check in every fifteen minutes — silence escalates it automatically.</p></a>
+    <a class="cell coord" href="/login"><div class="idx">03 · Coordinate</div><h3>Organisations coordinate</h3><p>Every incident, photo and resource need is grouped by district on a live command dashboard, with a 🔥 risk heatmap showing high-risk zones — 25 water requests in Kandy, not 25 scattered messages.</p></a>
+  </div>
+</div></section>
+
+<section class="section" id="safety">
+  <div class="shead"><span class="k">Safety</span><h2>Know what to do before help arrives.</h2>
+  <p>The first minutes of any emergency belong to you. These basics save lives.</p></div>
+  <div class="grid3">
+    <div class="cell"><div class="idx">Flood</div><ul><li>Move to higher ground immediately — never wait for water to rise</li><li>Avoid walking or driving through moving water</li><li>Switch off mains electricity if water enters your home</li></ul></div>
+    <div class="cell"><div class="idx">Fire</div><ul><li>Get out, stay out — never go back inside for belongings</li><li>Stay low under smoke; cover your nose and mouth</li><li>Feel doors before opening — heat means fire behind</li></ul></div>
+    <div class="cell"><div class="idx">Medical</div><ul><li>Call 1990 (Suwa Seriya) — free island-wide ambulance</li><li>Don't move an injured person unless in immediate danger</li><li>Apply firm pressure to bleeding with a clean cloth</li></ul></div>
+  </div>
+</section>
+
+<footer class="foot"><div class="inner">
+  <div><h4>Contact</h4><p class="big">Emergency: 117</p><p class="big" style="margin-bottom:10px">Ambulance: 1990</p><p>ResQNet Project Team<br>SLIIT, Sri Lanka</p></div>
+  <div><h4>Platform</h4><ul><li><a href="/volunteer">Become a volunteer</a></li>
+      <li><a href="/register">Join the network</a></li><li><a href="/login">Sign in</a></li><li><a href="/feed">Transparency feed</a></li><li><a href="#safety">Safety tips</a></li></ul></div>
+  <div><h4>Our client</h4><p>Built in partnership with relief organisations in Sri Lanka for requirement gathering and sprint review feedback.</p></div>
+</div><div class="credit">ResQNet — Community Emergency Intelligence & Response Network · SLIIT · CIS047-3</div></footer>
+
+<script src="/js/weather.js"></script>
+</body></html>

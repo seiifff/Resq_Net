@@ -1,0 +1,58 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Your report — ResQNet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="description" content="ResQNet — community emergency intelligence and response network for Sri Lanka. Report emergencies, respond as a volunteer, coordinate relief in real time."><link rel="stylesheet" href="/css/app.css">
+<style>
+.tk{max-width:540px;margin:0 auto;padding:40px 5vw 70px;text-align:center}
+.tk .check{width:64px;height:64px;border-radius:50%;background:var(--green-bg);border:1px solid var(--green);display:grid;place-items:center;font-size:30px;margin:0 auto 18px}
+.tk h1{font-family:var(--serif);font-weight:700;font-size:28px;margin-bottom:8px}
+.tk .lead{color:var(--muted);margin-bottom:26px}
+.statusbox{background:var(--card);border:1px solid var(--rule-2);border-radius:12px;padding:22px;text-align:left;margin-bottom:20px}
+.statusbox .row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--rule);font-size:14px}
+.statusbox .row:last-child{border-bottom:none}
+.statusbox .row span:first-child{color:var(--muted);font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.pill{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:4px 11px;border-radius:6px;font-weight:500;border:1px solid}
+.pill.active{background:var(--red-bg);color:var(--red);border-color:var(--red)}
+.pill.responding{background:var(--amber-bg);color:var(--amber);border-color:var(--amber)}
+.pill.resolved{background:var(--green-bg);color:var(--green);border-color:var(--green)}
+.tk .note{font-size:13px;color:var(--muted);line-height:1.6}
+.tk .cta{margin-top:22px}
+</style></head><body>
+<div class="ticker"><span class="dot"></span> ResQNet network — online <span class="sep">/</span> Report submitted <span class="right">117 · 1990</span></div>
+<nav class="nav"><a href="/" class="brand"><span class="mk">✚</span> Res<span class="q">Q</span>Net</a>
+  <div class="links"><a class="keep" href="/quick-report">Report another</a></div></nav>
+
+<main class="tk rise">
+  <div class="check">✓</div>
+  <h1>Your report is in.</h1>
+  <p class="lead">Nearby volunteers and organisations have been alerted. Keep this page to check on it.</p>
+
+  <div class="statusbox" id="box">
+    <div class="row"><span>Type</span><span id="tType">—</span></div>
+    <div class="row"><span>Area</span><span id="tArea">—</span></div>
+    <div class="row"><span>Reported</span><span id="tWhen">—</span></div>
+    <div class="row"><span>Status</span><span class="pill active" id="tStatus">—</span></div>
+  </div>
+
+  <p class="note">This page updates automatically. If your emergency is life-threatening and help hasn't arrived, call <b>117</b> (Police) or <b>1990</b> (Ambulance) directly.</p>
+  <div class="cta"><a class="btn btn-line" href="/register" style="width:auto;display:inline-flex">Create an account to chat with responders</a></div>
+</main>
+
+<script>
+const NAME={flood:"🌊 Flood",fire:"🔥 Fire",accident:"🚗 Road accident",medical:"🚑 Medical"};
+const id=location.pathname.split("/").pop();
+async function load(){
+  try{
+    const r=await fetch("/api/quick-status/"+id);
+    if(!r.ok){document.getElementById("box").innerHTML='<div class="row"><span>Report not found</span></div>';return;}
+    const {incident:i}=await r.json();
+    document.getElementById("tType").textContent=NAME[i.type]||i.type;
+    document.getElementById("tArea").textContent=(i.district||"—")+(i.escalated&&i.status!=="resolved"?" · escalated":"");
+    document.getElementById("tWhen").textContent=new Date(i.created_at+"Z").toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
+    const s=document.getElementById("tStatus"); s.textContent=i.status; s.className="pill "+i.status;
+  }catch{}
+}
+load(); setInterval(load,10000);
+</script><script src="/js/toast.js"></script>
+</body></html>

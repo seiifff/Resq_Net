@@ -1,0 +1,26 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sign in — ResQNet</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="description" content="ResQNet — community emergency intelligence and response network for Sri Lanka. Report emergencies, respond as a volunteer, coordinate relief in real time."><link rel="stylesheet" href="/css/app.css">
+</head><body>
+<div class="ticker"><span class="dot"></span> ResQNet network — online <span class="sep">/</span> Sri Lanka <span class="right">Emergency: 117</span></div>
+<div class="authwrap">
+  <nav class="nav"><a href="/" class="brand"><span class="mk">✚</span> Res<span class="q">Q</span>Net</a>
+    <div class="links"><a href="/#how">How it works</a><a href="/feed">Transparency</a><span class="btns"><a class="btn btn-red keep" href="/register">Join</a></span></div></nav>
+  <div class="authmid">
+    <div class="authpitch rise"><span class="kick">Welcome back</span>
+      <h1>The network<br>is <em>live.</em></h1>
+      <p>Every minute an incident stays unseen is a minute lost. Sign back in — your dashboard is waiting.</p>
+    </div>
+    <div class="card rise-2">
+      <h2>Sign in</h2><p class="sub">Enter your details to continue.</p>
+      <div class="msg error" id="msg" role="alert"></div>
+      <form id="loginForm" novalidate>
+        <div class="field"><label for="email">Email</label><input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required></div>
+        <div class="field"><label for="password">Password</label><input type="password" id="password" name="password" placeholder="Your password" autocomplete="current-password" required></div>
+        <button class="btn btn-red btn-block" type="submit" id="submitBtn">Sign in</button>
+      </form>
+      <p class="alt">New to ResQNet? <a href="/register">Join the network</a></p>
+    </div>
+  </div>
+</div>
+<script src="/js/auth.js"></script></body></html>

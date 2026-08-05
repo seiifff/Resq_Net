@@ -1,0 +1,89 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Organisation dashboard — ResQNet</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="description" content="ResQNet — community emergency intelligence and response network for Sri Lanka. Report emergencies, respond as a volunteer, coordinate relief in real time."><link rel="stylesheet" href="/css/app.css">
+<style>
+.g2c{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.chartbox{height:230px;position:relative}
+.bfield{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+.bfield select{max-width:170px}.bfield input{flex:1;min-width:200px}.bfield .btn{width:auto;padding:11px 22px}
+.sms-note{font-size:11.5px;color:var(--muted);margin-top:8px}
+@media(max-width:860px){.g2c{grid-template-columns:1fr}}@media(max-width:640px){.app{padding-left:16px;padding-right:16px}.bfield .btn{width:100%}.bfield select{max-width:none;width:100%}.rowline{flex-wrap:wrap;row-gap:4px}.rowline .bar{flex-basis:100%}.kpis{grid-template-columns:repeat(3,1fr)}.chartbox{height:200px}}
+</style></head><body>
+<div class="ticker"><span class="dot"></span> ResQNet network — online <span class="sep">/</span> Organisation command <span class="right"><a href="/map" style="color:inherit">Live map</a> · <a href="/feed" style="color:inherit">Public feed</a> · <a href="/dashboard" style="color:inherit">My dashboard</a></span></div>
+<nav class="nav"><a href="/dashboard" class="brand"><span class="mk">✚</span> Res<span class="q">Q</span>Net</a>
+  <div class="links"><a href="/map">Live map</a><a href="/feed">Public feed</a><a href="/dashboard">My dashboard</a></div></nav>
+<main class="app">
+  <div class="ahead rise"><h1>Organisation dashboard</h1><span class="badge admin">ADMIN</span></div>
+  <p class="asub">Live intelligence across the network — refreshes every 10 seconds.</p>
+
+  <div class="kpis rise-2">
+    <div class="kpi"><div class="v" id="kTotal">—</div><div class="k">Total</div></div>
+    <a class="kpi" href="/map" title="View active incidents on the map"><div class="v red" id="kActive">—</div><div class="k">Active</div></a>
+    <div class="kpi"><div class="v amber" id="kResp">—</div><div class="k">Responding</div></div>
+    <div class="kpi"><div class="v green" id="kRes">—</div><div class="k">Resolved</div></div>
+    <div class="kpi"><div class="v" id="kAvgR">—</div><div class="k">Avg response</div></div>
+    <a class="kpi" href="/map" title="View SOS incidents on the map"><div class="v red" id="kSos">—</div><div class="k">Open SOS</div></a>
+  </div>
+
+  <div style="height:16px"></div>
+  <div class="g2c rise-3">
+    <div class="panel"><span class="ey">Incidents over time (14 days)</span><div class="chartbox"><canvas id="chartTime"></canvas></div></div>
+    <div class="panel"><span class="ey">Incidents by type</span><div class="chartbox"><canvas id="chartType"></canvas></div></div>
+  </div>
+
+  <div style="height:16px"></div>
+  <div class="g2">
+    <div class="panel"><span class="ey">📦 Resource requests by district</span><div id="resList"><p style="color:var(--muted);font-size:13.5px">No open resource requests.</p></div></div>
+    <div class="panel"><span class="ey">🔥 Hotspot districts</span><div id="hotList"></div></div>
+  </div>
+
+  <div style="height:16px"></div>
+  <div class="panel"><span class="ey">📦 Supplies needed — with amounts, by district</span><div id="needsList"><p style="color:var(--muted);font-size:13.5px">No specific supply requests yet.</p></div></div>
+
+  <div style="height:16px"></div>
+  <div class="panel"><span class="ey">🚁 Responder deployment recommendations</span><div id="depList"><p style="color:var(--muted);font-size:13.5px">Nothing requires deployment right now.</p></div></div>
+
+  <div style="height:16px"></div>
+  <div class="g2">
+    <div class="panel"><span class="ey">🛟 Most active volunteers</span><div id="volList"><p style="color:var(--muted);font-size:13.5px">No responses yet.</p></div></div>
+    <div class="panel"><span class="ey">📡 Broadcast warning to citizens</span>
+      <div class="msg error" id="bMsg" role="alert"></div><div class="msg ok" id="bOk" role="alert"></div>
+      <div class="bfield"><div class="field" style="margin:0"><select id="bDistrict"><option value="ALL">All districts</option></select></div>
+        <div class="field" style="margin:0;flex:1"><input type="text" id="bBody" maxlength="300" placeholder="e.g. Flood warning — avoid low-lying roads"></div>
+        <button class="btn btn-red" id="bSend">Broadcast</button></div>
+      <p class="sms-note">Demo build delivers this as an in-app banner. Production connects the same feed to an SMS gateway.</p>
+    </div>
+  </div>
+
+  <div style="height:16px"></div>
+  <div class="panel"><span class="ey">Recent incidents</span><div id="recentList"></div></div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+// Charts feature (new). Reads the same /api/admin/stats payload via a global hook.
+let _ct,_cy;
+window.drawCharts = (d) => {
+  if (!window.Chart) return;
+  const ink="#3A3733", grid="rgba(0,0,0,.06)", red="#C0392B", amber="#B8791A", green="#3B7A57", blue="#2C5F8A";
+  // by-type doughnut from recent+hotspots isn't enough; derive counts from recent list
+  const typeCounts = { flood:0, fire:0, accident:0, medical:0 };
+  (d.recent||[]).forEach(i => { if (typeCounts[i.type]!=null) typeCounts[i.type]++; });
+  // incidents over time from recent (group by date)
+  const byDay = {};
+  (d.recent||[]).forEach(i => { const k=(i.created_at||"").slice(0,10); if(k) byDay[k]=(byDay[k]||0)+1; });
+  const days = Object.keys(byDay).sort();
+  const counts = days.map(k=>byDay[k]);
+  const labels = days.map(k=>new Date(k+"T00:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"short"}));
+
+  const ctx1=document.getElementById("chartTime"), ctx2=document.getElementById("chartType");
+  if(_ct)_ct.destroy(); if(_cy)_cy.destroy();
+  _ct=new Chart(ctx1,{type:"line",data:{labels:labels.length?labels:["—"],datasets:[{data:counts.length?counts:[0],borderColor:red,backgroundColor:"rgba(192,57,43,.08)",fill:true,tension:.3,pointRadius:3,pointBackgroundColor:red}]},
+    options:{plugins:{legend:{display:false}},scales:{x:{grid:{color:grid},ticks:{color:ink,font:{size:11}}},y:{beginAtZero:true,grid:{color:grid},ticks:{color:ink,precision:0,font:{size:11}}}},maintainAspectRatio:false}});
+  _cy=new Chart(ctx2,{type:"doughnut",data:{labels:["Flood","Fire","Accident","Medical"],datasets:[{data:[typeCounts.flood,typeCounts.fire,typeCounts.accident,typeCounts.medical],backgroundColor:[blue,red,amber,green],borderColor:"#161D24",borderWidth:2}]},
+    options:{plugins:{legend:{position:"right",labels:{color:ink,font:{size:12},boxWidth:12}}},cutout:"62%",maintainAspectRatio:false}});
+};
+</script>
+<script src="/js/adminview.js"></script>
+<script src="/js/toast.js"></script>
+</body></html>
