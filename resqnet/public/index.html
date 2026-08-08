@@ -2,27 +2,27 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ResQNet — Emergency response for Sri Lanka</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="description" content="ResQNet — community emergency intelligence and response network for Sri Lanka. Report emergencies, respond as a volunteer, coordinate relief in real time."><link rel="stylesheet" href="/css/app.css">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="description" content="ResQNet — community emergency response network for Sri Lanka. Report emergencies, respond as a volunteer, coordinate relief in real time."><link rel="stylesheet" href="/css/app.css">
 </head><body>
 <div class="ticker"><span class="dot"></span> ResQNet network — online <span class="sep">/</span> Sri Lanka <span class="right">Emergency: 117 · Ambulance: 1990</span></div>
 
 <nav class="nav">
   <a href="/" class="brand"><span class="mk">✚</span> Res<span class="q">Q</span>Net</a>
   <div class="links">
-    <a href="#safety">Safety</a><a href="#how">How it works</a><a href="/volunteer">Volunteer</a><a href="/shelters">Shelters</a><a href="/safe-route">Safe route</a><a href="/feed">Transparency</a>
+    <a href="#safety" data-i18n="nav.safety">Safety</a><a href="#how" data-i18n="nav.how">How it works</a><a href="/volunteer" data-i18n="nav.volunteer">Volunteer</a><a href="/shelters" data-i18n="nav.shelters">Shelters</a><a href="/missing" data-i18n="nav.missing">Missing persons</a><a href="/safe-route" data-i18n="nav.saferoute">Safe route</a><a href="/feed" data-i18n="nav.transparency">Transparency</a>
     <span class="btns"><a class="btn btn-line keep" href="/login">Sign in</a><a class="btn btn-red keep" href="/register">Join</a></span>
   </div>
 </nav>
 
 <header class="hero">
   <div class="rise">
-    <span class="kick">Community emergency network</span>
+    <span class="kick" data-i18n="hero.kick">Community emergency network</span>
     <div class="weather-alert" id="weatherAlert" style="display:none"></div>
     <h1>When minutes<br>decide <em>everything.</em></h1>
     <p class="lead">ResQNet connects the citizens who witness an emergency, the volunteers who can respond, and the organisations who coordinate — on one live network across Sri Lanka.</p>
     <form class="locbar" id="locForm" style="display:none"></form>
     <div class="cta">
-      <a class="btn btn-red" href="/quick-report">🚨 Report an emergency</a>
+      <a class="btn btn-red" href="/quick-report" data-i18n="hero.report">🚨 Report an emergency</a>
       <a class="btn btn-line" href="/login">Sign in</a>
       <a class="btn btn-line" href="/volunteer">Join as volunteer</a>
     </div>
@@ -64,6 +64,16 @@
   </div>
 </div></section>
 
+
+<section class="section" id="missing-box"><div class="inner">
+  <div class="shead"><span class="k" data-i18n="missing.tag">Help reunite families</span><h2 data-i18n="missing.title">Missing persons</h2>
+  <p data-i18n="missing.desc">During a disaster, families get separated. Report someone who is missing, or check the list to help find them and reunite them with their loved ones.</p></div>
+  <div class="grid3" style="grid-template-columns:1fr 1fr;max-width:760px;margin:0 auto">
+    <a class="cell report" href="/missing" style="text-align:center"><div class="idx">🔎 Find</div><h3 data-i18n="missing.view">View missing persons</h3><p>See everyone currently reported missing, with last-seen location and details, so you can help find them.</p></a>
+    <a class="cell coord" href="/missing" style="text-align:center"><div class="idx">📢 Report</div><h3 data-i18n="missing.report">Report a missing person</h3><p>Report a family member or neighbour who is missing so volunteers and the community can look out for them.</p></a>
+  </div>
+</div></section>
+
 <section class="section" id="safety">
   <div class="shead"><span class="k">Safety</span><h2>Know what to do before help arrives.</h2>
   <p>The first minutes of any emergency belong to you. These basics save lives.</p></div>
@@ -78,8 +88,9 @@
   <div><h4>Contact</h4><p class="big">Emergency: 117</p><p class="big" style="margin-bottom:10px">Ambulance: 1990</p><p>ResQNet Project Team<br>SLIIT, Sri Lanka</p></div>
   <div><h4>Platform</h4><ul><li><a href="/volunteer">Become a volunteer</a></li>
       <li><a href="/register">Join the network</a></li><li><a href="/login">Sign in</a></li><li><a href="/shelters">Emergency shelters</a></li><li><a href="/missing">Missing persons</a></li><li><a href="/safe-route">Safe route</a></li><li><a href="/feed">Transparency feed</a></li><li><a href="#safety">Safety tips</a></li></ul></div>
-  <div><h4>Our client</h4><p>Built in partnership with relief organisations in Sri Lanka for requirement gathering and sprint review feedback.</p></div>
-</div><div class="credit">ResQNet — Community Emergency Intelligence & Response Network · SLIIT · CIS047-3</div></footer>
+  <div><h4>Our client</h4><p>Built for the Sri Lanka Red Cross Society as our client stakeholder, who provided feedback through our sprint reviews.</p></div>
+</div><div class="credit">ResQNet — Community Emergency Response Network · SLIIT · CIS047-3</div></footer>
 
 <script src="/js/weather.js"></script>
+<script src="/js/lang.js"></script>
 </body></html>

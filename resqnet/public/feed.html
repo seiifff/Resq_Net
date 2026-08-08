@@ -25,4 +25,5 @@ document.getElementById("tRes").textContent=totals?.resolved||0;
 document.getElementById("tAvg").textContent=totals?.avg_response_min!=null?totals.avg_response_min+" min":"—";
 document.getElementById("feedList").innerHTML=feed.length?feed.map(i=>{const w=new Date(i.resolved_at+"Z").toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
 return `<div class="frow"><strong>${NAME[i.type]}</strong><span class="d">${i.district||"—"}</span><span class="t">${w}</span>${i.false_report?'<span class="badge admin">false report</span>':'<span class="badge citizen">resolved</span>'}${!i.false_report&&i.response_min!=null?`<span class="rt">responded in ${i.response_min} min</span>`:""}</div>`}).join(""):'<p style="color:var(--muted);font-size:13.5px">No resolved incidents yet.</p>';})();
-</script></body></html>
+</script><script src="/js/lang.js"></script>
+</body></html>
