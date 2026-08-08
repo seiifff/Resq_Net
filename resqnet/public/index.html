@@ -10,7 +10,7 @@
   <a href="/" class="brand"><span class="mk">✚</span> Res<span class="q">Q</span>Net</a>
   <div class="links">
     <a href="#safety" data-i18n="nav.safety">Safety</a><a href="#how" data-i18n="nav.how">How it works</a><a href="/volunteer" data-i18n="nav.volunteer">Volunteer</a><a href="/shelters" data-i18n="nav.shelters">Shelters</a><a href="/missing" data-i18n="nav.missing">Missing persons</a><a href="/safe-route" data-i18n="nav.saferoute">Safe route</a><a href="/feed" data-i18n="nav.transparency">Transparency</a>
-    <span class="btns"><a class="btn btn-line keep" href="/login">Sign in</a><a class="btn btn-red keep" href="/register">Join</a></span>
+    <span class="btns"><a class="btn btn-line keep" href="/login" data-i18n="nav.signin">Sign in</a><a class="btn btn-red keep" href="/register" data-i18n="nav.join">Join</a></span>
   </div>
 </nav>
 
@@ -18,20 +18,20 @@
   <div class="rise">
     <span class="kick" data-i18n="hero.kick">Community emergency network</span>
     <div class="weather-alert" id="weatherAlert" style="display:none"></div>
-    <h1>When minutes<br>decide <em>everything.</em></h1>
-    <p class="lead">ResQNet connects the citizens who witness an emergency, the volunteers who can respond, and the organisations who coordinate — on one live network across Sri Lanka.</p>
+    <h1 data-i18n-html="hero.h1">When minutes<br>decide <em>everything.</em></h1>
+    <p class="lead" data-i18n="hero.lead">ResQNet connects the citizens who witness an emergency, the volunteers who can respond, and the organisations who coordinate — on one live network across Sri Lanka.</p>
     <form class="locbar" id="locForm" style="display:none"></form>
     <div class="cta">
       <a class="btn btn-red" href="/quick-report" data-i18n="hero.report">🚨 Report an emergency</a>
-      <a class="btn btn-line" href="/login">Sign in</a>
-      <a class="btn btn-line" href="/volunteer">Join as volunteer</a>
+      <a class="btn btn-line" href="/login" data-i18n="hero.signin">Sign in</a>
+      <a class="btn btn-line" href="/volunteer" data-i18n="hero.volunteer">Join as volunteer</a>
     </div>
-    <p class="mono" style="font-size:12px;color:var(--muted);margin-top:12px">No account needed to report — just tap and go.</p>
+    <p class="mono" style="font-size:12px;color:var(--muted);margin-top:12px"><span data-i18n="hero.noaccount">No account needed to report — just tap and go.</span></p>
     <div class="rule"></div>
     <div class="stats">
-      <a class="stat" href="tel:117"><span class="n red">117</span><span class="l"><b>Emergency hotline — tap to call</b>Ambulance: 1990 (Suwa Seriya)</span></a>
-      <a class="stat" href="/volunteer"><span class="n">3</span><span class="l"><b>Connected roles</b>Citizen · Volunteer · Organisation</span></a>
-      <a class="stat" href="/feed"><span class="n">25</span><span class="l"><b>Districts covered</b>See resolved incidents →</span></a>
+      <a class="stat" href="tel:117"><span class="n red">117</span><span class="l"><b data-i18n="stat.hotline">Emergency hotline — tap to call</b><span data-i18n="stat.ambulance">Ambulance: 1990 (Suwa Seriya)</span></span></a>
+      <a class="stat" href="/volunteer"><span class="n">3</span><span class="l"><b data-i18n="stat.roles">Connected roles</b><span data-i18n="stat.rolesdesc">Citizen · Volunteer · Organisation</span></span></a>
+      <a class="stat" href="/feed"><span class="n">25</span><span class="l"><b data-i18n="stat.districts">Districts covered</b><span data-i18n="stat.districtsdesc">See resolved incidents →</span></span></a>
     </div>
   </div>
   <a class="weather rise-2" href="/quick-report" aria-label="Weather in Colombo — report an emergency" style="text-decoration:none;color:inherit">

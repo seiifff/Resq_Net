@@ -12,7 +12,7 @@
       "nav.missing":"Missing persons","nav.signin":"Sign in","nav.join":"Join",
       "hero.kick":"Community emergency network",
       "hero.title":"When minutes decide everything.",
-      "hero.lead":"ResQNet connects the citizens who witness an emergency, the volunteers who can respond, and the organisations who coordinate — on one live network across Sri Lanka.",
+      "hero.h1":"When minutes<br>decide <em>everything.</em>","hero.lead":"ResQNet connects the citizens who witness an emergency, the volunteers who can respond, and the organisations who coordinate — on one live network across Sri Lanka.","hero.signin":"Sign in","hero.volunteer":"Join as volunteer","nav.signin":"Sign in","nav.join":"Join","stat.hotline":"Emergency hotline — tap to call","stat.ambulance":"Ambulance: 1990 (Suwa Seriya)","stat.roles":"Connected roles","stat.rolesdesc":"Citizen · Volunteer · Organisation","stat.districts":"Districts covered","stat.districtsdesc":"See resolved incidents →",
       "hero.report":"🚨 Report an emergency","hero.signin":"Sign in","hero.volunteer":"Join as volunteer",
       "hero.noaccount":"No account needed to report — just tap and go.",
       "missing.title":"Missing persons","missing.tag":"Help reunite families",
@@ -29,7 +29,7 @@
       "nav.missing":"අතුරුදහන් වූ පුද්ගලයින්","nav.signin":"පිවිසෙන්න","nav.join":"සම්බන්ධ වන්න",
       "hero.kick":"ප්‍රජා හදිසි ජාලය",
       "hero.title":"මිනිත්තු කිහිපයක් සියල්ල තීරණය කරන විට.",
-      "hero.lead":"ResQNet හදිසි අවස්ථාවක් දකින පුරවැසියන්, ප්‍රතිචාර දැක්විය හැකි ස්වේච්ඡා සේවකයන් සහ සම්බන්ධීකරණය කරන සංවිධාන එකම සජීවී ජාලයකට සම්බන්ධ කරයි.",
+      "hero.h1":"මිනිත්තු කිහිපයෙන්<br>සියල්ල <em>තීරණය වේ.</em>","hero.lead":"ResQNet හදිසි අවස්ථාවක් දකින පුරවැසියන්, ප්‍රතිචාර දැක්විය හැකි ස්වේච්ඡා සේවකයන් සහ සම්බන්ධීකරණය කරන සංවිධාන එකම සජීවී ජාලයකට සම්බන්ධ කරයි.","hero.signin":"පිවිසෙන්න","hero.volunteer":"ස්වේච්ඡා සේවකයෙකු ලෙස එක්වන්න","nav.signin":"පිවිසෙන්න","nav.join":"එක්වන්න","stat.hotline":"හදිසි ඇමතුම් අංකය — ඇමතීමට ස්පර්ශ කරන්න","stat.ambulance":"ගිලන්රථ: 1990 (සුව සැරිය)","stat.roles":"සම්බන්ධිත භූමිකා","stat.rolesdesc":"පුරවැසි · ස්වේච්ඡා සේවක · සංවිධානය","stat.districts":"ආවරණය වූ දිස්ත්‍රික්ක","stat.districtsdesc":"විසඳූ සිද්ධි බලන්න →",
       "hero.report":"🚨 හදිසි අවස්ථාවක් වාර්තා කරන්න","hero.signin":"පිවිසෙන්න","hero.volunteer":"ස්වේච්ඡා සේවකයෙකු ලෙස සම්බන්ධ වන්න",
       "hero.noaccount":"වාර්තා කිරීමට ගිණුමක් අවශ්‍ය නැත — ස්පර්ශ කර යන්න.",
       "missing.title":"අතුරුදහන් වූ පුද්ගලයින්","missing.tag":"පවුල් නැවත එක්කරන්න උදව් කරන්න",
@@ -46,7 +46,7 @@
       "nav.missing":"காணாமல் போனவர்கள்","nav.signin":"உள்நுழைய","nav.join":"இணைய",
       "hero.kick":"சமூக அவசர வலையமைப்பு",
       "hero.title":"நிமிடங்கள் அனைத்தையும் தீர்மானிக்கும் போது.",
-      "hero.lead":"ResQNet அவசரநிலையைக் காணும் குடிமக்கள், பதிலளிக்கக்கூடிய தன்னார்வலர்கள் மற்றும் ஒருங்கிணைக்கும் அமைப்புகளை ஒரே நேரடி வலையமைப்பில் இணைக்கிறது.",
+      "hero.h1":"நிமிடங்கள்<br>அனைத்தையும் <em>தீர்மானிக்கும்.</em>","hero.lead":"ResQNet அவசரநிலையைக் காணும் குடிமக்கள், பதிலளிக்கக்கூடிய தன்னார்வலர்கள் மற்றும் ஒருங்கிணைக்கும் அமைப்புகளை ஒரே நேரடி வலையமைப்பில் இணைக்கிறது.","hero.signin":"உள்நுழைய","hero.volunteer":"தன்னார்வலராக இணையுங்கள்","nav.signin":"உள்நுழைய","nav.join":"இணைய","stat.hotline":"அவசர தொலைபேசி — அழைக்க தட்டவும்","stat.ambulance":"ஆம்புலன்ஸ்: 1990 (சுவ செரிய)","stat.roles":"இணைந்த பாத்திரங்கள்","stat.rolesdesc":"குடிமகன் · தன்னார்வலர் · அமைப்பு","stat.districts":"உள்ளடக்கிய மாவட்டங்கள்","stat.districtsdesc":"தீர்க்கப்பட்ட சம்பவங்களைப் பார்க்கவும் →",
       "hero.report":"🚨 அவசரநிலையைப் புகாரளிக்கவும்","hero.signin":"உள்நுழைய","hero.volunteer":"தன்னார்வலராக இணையுங்கள்",
       "hero.noaccount":"புகாரளிக்க கணக்கு தேவையில்லை — தட்டி அனுப்புங்கள்.",
       "missing.title":"காணாமல் போனவர்கள்","missing.tag":"குடும்பங்களை மீண்டும் இணைக்க உதவுங்கள்",
@@ -72,6 +72,10 @@
     document.querySelectorAll("[data-i18n-ph]").forEach(el=>{
       const k = el.getAttribute("data-i18n-ph");
       if (dict[k] != null) el.setAttribute("placeholder", dict[k]);
+    });
+    document.querySelectorAll("[data-i18n-html]").forEach(el=>{
+      const k = el.getAttribute("data-i18n-html");
+      if (dict[k] != null) el.innerHTML = dict[k];
     });
     document.documentElement.setAttribute("lang", lang);
     // update the picker's active state
