@@ -64,6 +64,21 @@ app.use((req, res) => {
   res.status(404).sendFile(path.join(pub, "404.html"));
 });
 
+// Auto-load demo data on startup if the database is empty.
+// This keeps the app populated for demos on hosts (like Render's free
+// tier) that reset the database on redeploy, without needing shell access.
+// It only seeds when there are no incidents yet, so it never overwrites
+// real data. Set SEED_DEMO=off in the environment to disable.
+try {
+  if (process.env.SEED_DEMO !== "off") {
+    const seed = require("./seed-demo");
+    const result = seed();
+    if (result.seeded) console.log("  Demo data loaded on startup.");
+  }
+} catch (e) {
+  console.error("  Demo seed skipped:", e.message);
+}
+
 app.listen(PORT, () => {
   console.log(`\n  ResQNet running → http://localhost:${PORT}\n`);
 });
