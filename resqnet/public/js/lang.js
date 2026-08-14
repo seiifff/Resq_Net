@@ -7,7 +7,7 @@
 (function () {
   const T = {
     en: {
-      "nav.safety":"Safety","nav.how":"How it works","nav.volunteer":"Volunteer",
+      "nav.safety":"Safety","nav.map":"Live map","nav.how":"How it works","nav.volunteer":"Volunteer",
       "nav.shelters":"Shelters","nav.saferoute":"Safe route","nav.transparency":"Transparency",
       "nav.missing":"Missing persons","nav.signin":"Sign in","nav.join":"Join",
       "hero.kick":"Community emergency network",
@@ -21,10 +21,10 @@
       "lang.label":"Language",
       "chat.hint":"You can type in Sinhala, Tamil or English — send your message in your own language.","chat.title":"Incident chat","chat.ph":"Type a message…",
       "how.k":"How it works","how.title":"Three people. One network.",
-      "how.report":"Citizens report","how.respond":"Volunteers respond","how.coord":"Organisations coordinate",
+      "how.report":"Citizens report","how.respond":"Volunteers respond","how.coord":"Organisations coordinate","page.missing":"Missing persons register","page.feed":"Transparency feed","page.admin":"Organisation dashboard","page.report":"Report an emergency","page.shelters":"Emergency shelters","page.saferoute":"Safe route","page.volunteer":"Volunteer dashboard","page.map":"Live incident map",
     },
     si: {
-      "nav.safety":"ආරක්ෂාව","nav.how":"ක්‍රියාත්මක වන ආකාරය","nav.volunteer":"ස්වේච්ඡා සේවක",
+      "nav.safety":"ආරක්ෂාව","nav.map":"සජීවී සිතියම","nav.how":"ක්‍රියාත්මක වන ආකාරය","nav.volunteer":"ස්වේච්ඡා සේවක",
       "nav.shelters":"රැකවරණ මධ්‍යස්ථාන","nav.saferoute":"ආරක්ෂිත මාර්ගය","nav.transparency":"විනිවිදභාවය",
       "nav.missing":"අතුරුදහන් වූ පුද්ගලයින්","nav.signin":"පිවිසෙන්න","nav.join":"සම්බන්ධ වන්න",
       "hero.kick":"ප්‍රජා හදිසි ජාලය",
@@ -38,10 +38,10 @@
       "lang.label":"භාෂාව",
       "chat.hint":"ඔබට සිංහල, දෙමළ හෝ ඉංග්‍රීසි භාෂාවෙන් ටයිප් කළ හැක — ඔබේම භාෂාවෙන් පණිවිඩය යවන්න.","chat.title":"සිද්ධි කතාබහ","chat.ph":"පණිවිඩයක් type කරන්න…",
       "how.k":"ක්‍රියාත්මක වන ආකාරය","how.title":"පුද්ගලයන් තිදෙනෙක්. එක් ජාලයක්.",
-      "how.report":"පුරවැසියන් වාර්තා කරයි","how.respond":"ස්වේච්ඡා සේවකයන් ප්‍රතිචාර දක්වයි","how.coord":"සංවිධාන සම්බන්ධීකරණය කරයි",
+      "how.report":"පුරවැසියන් වාර්තා කරයි","how.respond":"ස්වේච්ඡා සේවකයන් ප්‍රතිචාර දක්වයි","how.coord":"සංවිධාන සම්බන්ධීකරණය කරයි","page.missing":"අතුරුදහන් වූ පුද්ගලයින්ගේ ලේඛනය","page.feed":"විනිවිදභාවය","page.admin":"සංවිධාන උපකරණ පුවරුව","page.report":"හදිසි අවස්ථාවක් වාර්තා කරන්න","page.shelters":"හදිසි රැකවරණ මධ්‍යස්ථාන","page.saferoute":"ආරක්ෂිත මාර්ගය","page.volunteer":"ස්වේච්ඡා සේවක උපකරණ පුවරුව","page.map":"සජීවී සිද්ධි සිතියම",
     },
     ta: {
-      "nav.safety":"பாதுகாப்பு","nav.how":"எப்படி வேலை செய்கிறது","nav.volunteer":"தன்னார்வலர்",
+      "nav.safety":"பாதுகாப்பு","nav.map":"நேரடி வரைபடம்","nav.how":"எப்படி வேலை செய்கிறது","nav.volunteer":"தன்னார்வலர்",
       "nav.shelters":"தங்குமிடங்கள்","nav.saferoute":"பாதுகாப்பான வழி","nav.transparency":"வெளிப்படைத்தன்மை",
       "nav.missing":"காணாமல் போனவர்கள்","nav.signin":"உள்நுழைய","nav.join":"இணைய",
       "hero.kick":"சமூக அவசர வலையமைப்பு",
@@ -55,7 +55,7 @@
       "lang.label":"மொழி",
       "chat.hint":"நீங்கள் சிங்களம், தமிழ் அல்லது ஆங்கிலத்தில் தட்டச்சு செய்யலாம் — உங்கள் சொந்த மொழியில் செய்தியை அனுப்புங்கள்.","chat.title":"சம்பவ அரட்டை","chat.ph":"செய்தியைத் தட்டச்சு செய்யவும்…",
       "how.k":"எப்படி வேலை செய்கிறது","how.title":"மூன்று பேர். ஒரு வலையமைப்பு.",
-      "how.report":"குடிமக்கள் புகாரளிக்கின்றனர்","how.respond":"தன்னார்வலர்கள் பதிலளிக்கின்றனர்","how.coord":"அமைப்புகள் ஒருங்கிணைக்கின்றன",
+      "how.report":"குடிமக்கள் புகாரளிக்கின்றனர்","how.respond":"தன்னார்வலர்கள் பதிலளிக்கின்றனர்","how.coord":"அமைப்புகள் ஒருங்கிணைக்கின்றன","page.missing":"காணாமல் போனோர் பதிவேடு","page.feed":"வெளிப்படைத்தன்மை","page.admin":"அமைப்பு டாஷ்போர்டு","page.report":"அவசரநிலையைப் புகாரளிக்கவும்","page.shelters":"அவசர தங்குமிடங்கள்","page.saferoute":"பாதுகாப்பான வழி","page.volunteer":"தன்னார்வலர் டாஷ்போர்டு","page.map":"நேரடி சம்பவ வரைபடம்",
     }
   };
 

@@ -9,11 +9,11 @@
 .sms-note{font-size:11.5px;color:var(--muted);margin-top:8px}
 @media(max-width:860px){.g2c{grid-template-columns:1fr}}@media(max-width:640px){.app{padding-left:16px;padding-right:16px}.bfield .btn{width:100%}.bfield select{max-width:none;width:100%}.rowline{flex-wrap:wrap;row-gap:4px}.rowline .bar{flex-basis:100%}.kpis{grid-template-columns:repeat(3,1fr)}.chartbox{height:200px}}
 </style></head><body>
-<div class="ticker"><span class="dot"></span> ResQNet network — online <span class="sep">/</span> Organisation command <span class="right"><a href="/map" style="color:inherit">Live map</a> · <a href="/feed" style="color:inherit">Public feed</a> · <a href="/dashboard" style="color:inherit">My dashboard</a></span></div>
+<div class="ticker"><span class="dot"></span> ResQNet network — online <span class="sep">/</span> Organisation command <span class="right"><a href="/map" style="color:inherit" data-i18n="nav.map">Live map</a> · <a href="/feed" style="color:inherit" data-i18n="nav.transparency">Public feed</a> · <a href="/dashboard" style="color:inherit">My dashboard</a></span></div>
 <nav class="nav"><a href="/dashboard" class="brand"><span class="mk">✚</span> Res<span class="q">Q</span>Net</a>
-  <div class="links"><a href="/map">Live map</a><a href="/feed">Public feed</a><a href="/dashboard">My dashboard</a></div></nav>
+  <div class="links"><a href="/map" data-i18n="nav.map">Live map</a><a href="/feed" data-i18n="nav.transparency">Public feed</a><a href="/dashboard">My dashboard</a></div></nav>
 <main class="app">
-  <div class="ahead rise"><h1>Organisation dashboard</h1><span class="badge admin">ADMIN</span></div>
+  <div class="ahead rise"><h1 data-i18n="page.admin">Organisation dashboard</h1><span class="badge admin">ADMIN</span></div>
   <p class="asub">Live intelligence across the network — refreshes every 10 seconds.</p>
 
   <div class="kpis rise-2">
@@ -86,4 +86,5 @@ window.drawCharts = (d) => {
 </script>
 <script src="/js/adminview.js"></script>
 <script src="/js/toast.js"></script>
+<script src="/js/lang.js"></script>
 </body></html>
