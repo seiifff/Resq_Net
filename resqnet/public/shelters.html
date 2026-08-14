@@ -37,12 +37,12 @@ html,body{height:100%}body{display:flex;flex-direction:column;overflow:hidden}
     <button class="addbtn" id="toggle">＋ Add a shelter</button>
     <div class="form" id="form">
       <label>Shelter name *</label><input id="name" placeholder="e.g. Kandy Community Hall">
-      <div class="row"><div><label>Capacity</label><input id="capacity" type="number" min="0" placeholder="200"></div>
-        <div><label>Currently housed</label><input id="occupancy" type="number" min="0" placeholder="0"></div></div>
-      <label>Contact</label><input id="contact" placeholder="Phone or name">
-      <label>Notes</label><textarea id="notes" rows="2" placeholder="Access notes, facilities…"></textarea>
+      <div class="row"><div><label data-i18n="sh.capacity">Capacity</label><input id="capacity" type="number" min="0" placeholder="200"></div>
+        <div><label data-i18n="sh.housed">Currently housed</label><input id="occupancy" type="number" min="0" placeholder="0"></div></div>
+      <label data-i18n="sh.contact">Contact</label><input id="contact" placeholder="Phone or name">
+      <label data-i18n="sh.notes">Notes</label><textarea id="notes" rows="2" placeholder="Access notes, facilities…"></textarea>
       <div class="hint" id="loc">📍 Click on the map to set the shelter location.</div>
-      <button class="addbtn" id="save" style="margin-top:10px">Save shelter</button>
+      <button class="addbtn" id="save" style="margin-top:10px" data-i18n="sh.save">Save shelter</button>
     </div>
     <div id="list"><p class="mini">Loading shelters…</p></div>
   </div>

@@ -3,6 +3,7 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
 const db = require("../db/database");
 const { districtFor } = require("./districts");
 
@@ -110,7 +111,21 @@ router.post("/quick-report", upload.single("photo"), (req, res) => {
   const resVal = RESOURCES.includes(resource) ? resource : null;
   if (errors.length) return res.status(400).json({ ok: false, errors });
 
-  const guest = db.prepare("SELECT id FROM users WHERE email = 'guest@resqnet.lk'").get();
+  // Ensure the system "Guest Reporter" account exists. Normally created at
+  // startup in db/database.js, but on hosts whose database is reset or was
+  // created before this account existed, create it on demand so no-login
+  // quick reports never fail for a missing guest row.
+  let guest = db.prepare("SELECT id FROM users WHERE email = 'guest@resqnet.lk'").get();
+  if (!guest) {
+    try {
+      const info = db.prepare(
+        "INSERT INTO users (full_name, email, phone, password, role) VALUES (?, ?, ?, ?, 'citizen')"
+      ).run("Guest Reporter", "guest@resqnet.lk", "0000000000", bcrypt.hashSync(Math.random().toString(36), 10));
+      guest = { id: info.lastInsertRowid };
+    } catch (e) {
+      guest = db.prepare("SELECT id FROM users WHERE email = 'guest@resqnet.lk'").get();
+    }
+  }
   if (!guest) return res.status(500).json({ ok: false, errors: ["Guest reporting is unavailable right now."] });
 
   const info = db.prepare(

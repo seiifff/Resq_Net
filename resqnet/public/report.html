@@ -46,15 +46,15 @@
   <div class="panel rise-2">
     <div class="msg error" id="msg" role="alert"></div>
     <form id="reportForm" novalidate>
-      <div class="field"><label>Emergency type</label>
+      <div class="field"><label data-i18n="rep.type">Emergency type</label>
         <div class="tgrid" id="typeGrid">
           <label class="tcard" data-v="flood"><input type="radio" name="type" value="flood"><div class="ic">🌊</div><div class="nm">Flood</div></label>
           <label class="tcard" data-v="fire"><input type="radio" name="type" value="fire"><div class="ic">🔥</div><div class="nm">Fire</div></label>
           <label class="tcard" data-v="accident"><input type="radio" name="type" value="accident"><div class="ic">🚗</div><div class="nm">Accident</div></label>
           <label class="tcard" data-v="medical"><input type="radio" name="type" value="medical"><div class="ic">🚑</div><div class="nm">Medical</div></label>
         </div></div>
-      <div class="field"><label>Your location</label>
-        <div class="gps" id="gpsBox"><span class="d"></span><span id="gpsText">Getting your location…</span><button type="button" class="retry" id="gpsRetry">Retry</button></div></div>
+      <div class="field"><label data-i18n="rep.location">Your location</label>
+        <div class="gps" id="gpsBox"><span class="d"></span><span id="gpsText">Getting your location…</span><button type="button" class="retry" id="gpsRetry" data-i18n="rep.retry">Retry</button></div></div>
       <div class="field"><label for="description">What's happening? <span style="text-transform:none;font-weight:400">(optional)</span></label>
         <textarea id="description" name="description" maxlength="500" placeholder="e.g. Water rising fast, two families trapped on upper floor…"></textarea></div>
       <div class="field"><label>What do you need? <span style="text-transform:none;font-weight:400">(optional)</span></label>

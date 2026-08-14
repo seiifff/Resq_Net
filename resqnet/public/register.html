@@ -12,13 +12,13 @@
       <p>Report emergencies as a citizen, or register as a volunteer and receive alerts matched to your skills and district.</p>
     </div>
     <div class="card wide rise-2" style="max-width:520px">
-      <h2>Create your account</h2><p class="sub">It takes less than a minute.</p>
+      <h2 data-i18n="reg.title">Create your account</h2><p class="sub" data-i18n="reg.sub">It takes less than a minute.</p>
       <div class="msg error" id="msg" role="alert"></div>
       <form id="registerForm" novalidate>
         <div class="field"><label>I want to</label>
           <div class="roles">
-            <label class="role on" data-role="citizen"><input type="radio" name="role" value="citizen" checked><div class="ic">📢</div><div class="nm">Report emergencies</div><div class="ds">Citizen — report incidents and request help</div></label>
-            <label class="role" data-role="volunteer"><input type="radio" name="role" value="volunteer"><div class="ic">🛟</div><div class="nm">Respond to alerts</div><div class="ds">Volunteer — get alerts matched to your skills</div></label>
+            <label class="role on" data-role="citizen"><input type="radio" name="role" value="citizen" checked><div class="ic">📢</div><div class="nm" data-i18n="reg.citizen">Report emergencies</div><div class="ds" data-i18n="reg.citizendesc">Citizen — report incidents and request help</div></label>
+            <label class="role" data-role="volunteer"><input type="radio" name="role" value="volunteer"><div class="ic">🛟</div><div class="nm" data-i18n="reg.volunteer">Respond to alerts</div><div class="ds" data-i18n="reg.volunteerdesc">Volunteer — get alerts matched to your skills</div></label>
           </div></div>
         <div class="field"><label for="full_name">Full name</label><input type="text" id="full_name" name="full_name" placeholder="Your full name" autocomplete="name" required></div>
         <div class="row2">

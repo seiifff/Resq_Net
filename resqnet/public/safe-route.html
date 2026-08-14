@@ -31,7 +31,7 @@ html,body{height:100%}body{display:flex;flex-direction:column;overflow:hidden}
 <div class="wrap">
   <div id="map"></div>
   <div class="side">
-    <h2>Safe evacuation route</h2>
+    <h2 data-i18n="sr.title">Safe evacuation route</h2>
     <div class="lead">Find the nearest registered shelter and get a route to it. Routing runs on free OpenStreetMap data.</div>
     <button class="btn" id="locate">📍 Use my location</button>
     <div class="mini" id="status">Tap “Use my location”, or click the map to set your start point.</div>
@@ -78,7 +78,7 @@ document.getElementById('locate').onclick=()=>{
 function rank(){
   if(!start||!shelters.length) return;
   const withD=shelters.map(s=>({s,d:dist([start.lat,start.lng],[s.lat,s.lng])})).sort((a,b)=>a.d-b.d);
-  const box=document.getElementById('dests'); box.innerHTML='<div class="mini" style="margin:10px 0 8px"><b>Nearest shelters</b></div>';
+  const box=document.getElementById('dests'); box.innerHTML='<div class="mini" style="margin:10px 0 8px"><b data-i18n="sr.nearest">Nearest shelters</b></div>';
   withD.slice(0,5).forEach(({s,d})=>{
     const el=document.createElement('div'); el.className='dest';
     const full=s.capacity&&s.occupancy>=s.capacity;
